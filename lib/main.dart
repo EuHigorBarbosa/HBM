@@ -34,31 +34,73 @@ class MyHomePage extends StatelessWidget {
           title: Text('Despesas Pessoais'),
         ),
         body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Container(
-              color: Colors.pink,
-              //padding: EdgeInsets.all(10.0),
-              //margin: EdgeInsets.all(100.0),
-              //alignment: Alignment.center,
-              //width: double.infinity,
-              child: Card(
-                child: Text(
-                  'Grafico',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Container(
+                color: Colors.pink,
+                //padding: EdgeInsets.all(10.0),
+                // margin: EdgeInsets.symmetric(
+                //   horizontal: 15,
+                //   vertical: 10,
+                // ),
+                //alignment: Alignment.center,
+                //width: double.infinity,
+                child: Card(
+                  child: Text(
+                    'Grafico2',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
 
-                elevation: 5,
-                //margin: EdgeInsets.all(4.0),
-                color: Colors.blue,
-                //borderOnForeground: false,
+                  elevation: 5,
+                  //margin: EdgeInsets.all(4.0),
+                  color: Colors.blue,
+                  //borderOnForeground: false,
+                ),
               ),
-            ),
-            Card(
-              child: Text('Lista de Transações'),
-            )
-          ],
-        ));
+              Column(
+                children: <Widget>[
+                  ..._transactions.map((tr) {
+                    return Card(
+                        child: Row(children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 2,
+                            )),
+                        padding: EdgeInsets.all(30),
+                        child: Text(
+                          tr.value.toString(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.purple,
+                          ),
+                        ),
+                      ),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              tr.title,
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.end,
+                            ),
+                            Text(tr.date.toString(),
+                                style: TextStyle(color: Colors.grey),
+                                textAlign: TextAlign.end),
+                          ]),
+                    ]));
+                  }).toList(),
+                ],
+              )
+            ]));
   }
 }
