@@ -14,6 +14,8 @@ class ExpensesApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
+  String title = '';
+  String value = '';
   final _transactions = [
     Transaction(
         date: DateTime.now(),
@@ -52,7 +54,6 @@ class MyHomePage extends StatelessWidget {
                     'Grafico2',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   ),
-
                   elevation: 5,
                   //margin: EdgeInsets.all(4.0),
                   color: Colors.blue,
@@ -118,10 +119,12 @@ class MyHomePage extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       TextField(
+                        onChanged: (newTitle) => title = newTitle,
                         decoration:
                             InputDecoration(labelText: 'Digite o Título'),
                       ),
                       TextField(
+                        onChanged: (newValue) => value = newValue,
                         decoration:
                             InputDecoration(labelText: 'Digite o valor (R\$)'),
                       ),
@@ -129,7 +132,10 @@ class MyHomePage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              print(
+                                  'O valor de title é: $title e o valor do gasto é: $value \n');
+                            },
                             child: Text('Nova Transação'),
                           ),
                         ],
