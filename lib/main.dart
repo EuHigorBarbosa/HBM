@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:registrofinanceiro/transaction.dart';
+import 'package:intl/intl.dart';
 
 main() => runApp(ExpensesApp());
 
@@ -63,9 +64,10 @@ class MyHomePage extends StatelessWidget {
                   ..._transactions.map((tr) {
                     return Card(
                         child: Row(children: <Widget>[
+                      // ==================== CONTAINER DOS NUMEROS
                       Container(
                         margin: EdgeInsets.symmetric(
-                          horizontal: 15,
+                          horizontal: 18,
                           vertical: 10,
                         ),
                         decoration: BoxDecoration(
@@ -75,8 +77,9 @@ class MyHomePage extends StatelessWidget {
                               width: 2,
                             )),
                         padding: EdgeInsets.all(30),
+                        // ================   NUMEROS DO PREÇO  =======
                         child: Text(
-                          tr.value.toString(),
+                          'R\$ ${tr.value.toStringAsFixed(2)}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
@@ -84,18 +87,21 @@ class MyHomePage extends StatelessWidget {
                           ),
                         ),
                       ),
+//======================== COLUMN DOS CARDS =====================
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // ================  TITULO DO CARD  =======
                             Text(
                               tr.title,
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.end,
+                              textAlign: TextAlign.start,
                             ),
-                            Text(tr.date.toString(),
+                            // ================  DATA DO CARD  ======================
+                            Text(DateFormat('d MMM y').format(tr.date),
                                 style: TextStyle(color: Colors.grey),
-                                textAlign: TextAlign.end),
+                                textAlign: TextAlign.start),
                           ]),
                     ]));
                   }).toList(),
