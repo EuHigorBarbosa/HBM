@@ -14,7 +14,9 @@ class ExpensesApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
-  String title = '';
+  final titleController = TextEditingController();
+  final valueController = TextEditingController();
+
   String value = '';
   final _transactions = [
     Transaction(
@@ -119,12 +121,15 @@ class MyHomePage extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       TextField(
-                        onChanged: (newTitle) => title = newTitle,
+                        //onChanged: (newTitle) => title = newTitle,
+                        //Não teremos o evento onCheged pois vou usar o controller
+                        controller: titleController,
                         decoration:
                             InputDecoration(labelText: 'Digite o Título'),
                       ),
                       TextField(
-                        onChanged: (newValue) => value = newValue,
+                        //onChanged: (newValue) => value = newValue,
+                        controller: valueController,
                         decoration:
                             InputDecoration(labelText: 'Digite o valor (R\$)'),
                       ),
@@ -134,7 +139,7 @@ class MyHomePage extends StatelessWidget {
                           ElevatedButton(
                             onPressed: () {
                               print(
-                                  'O valor de title é: $title e o valor do gasto é: $value \n');
+                                  'O valor de title é: ${titleController.text} e o valor do gasto é: ${valueController.text} \n');
                             },
                             child: Text('Nova Transação'),
                           ),
