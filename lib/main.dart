@@ -34,9 +34,9 @@ class MyHomePage extends StatelessWidget {
         appBar: AppBar(
           title: Text('Despesas Pessoais'),
         ),
+//? ======================= COLUNA DO GRAFICO ===============
         body: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Container(
                 color: Colors.pink,
@@ -59,6 +59,7 @@ class MyHomePage extends StatelessWidget {
                   //borderOnForeground: false,
                 ),
               ),
+              //* =============== COLUNA PRINCIPAL DOS CARDS ============
               Column(
                 children: <Widget>[
                   ..._transactions.map((tr) {
@@ -67,8 +68,8 @@ class MyHomePage extends StatelessWidget {
                       // ==================== CONTAINER DOS NUMEROS
                       Container(
                         margin: EdgeInsets.symmetric(
-                          horizontal: 18,
-                          vertical: 10,
+                          horizontal: 5,
+                          vertical: 5,
                         ),
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
@@ -79,15 +80,15 @@ class MyHomePage extends StatelessWidget {
                         padding: EdgeInsets.all(30),
                         // ================   NUMEROS DO PREÇO  =======
                         child: Text(
-                          'R\$ ${tr.value.toStringAsFixed(2)}',
+                          'R\$${tr.value.toStringAsFixed(2)}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 20,
+                            fontSize: 15,
                             color: Colors.purple,
                           ),
                         ),
                       ),
-//======================== COLUMN DOS CARDS =====================
+//======================== COLUMN DOS TEXTOS =====================
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -99,13 +100,43 @@ class MyHomePage extends StatelessWidget {
                               textAlign: TextAlign.start,
                             ),
                             // ================  DATA DO CARD  ======================
-                            Text(DateFormat('d MMM y').format(tr.date),
-                                style: TextStyle(color: Colors.grey),
-                                textAlign: TextAlign.start),
+                            Text(
+                              DateFormat('d MMM y').format(tr.date),
+                              style: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
                           ]),
                     ]));
                   }).toList(),
                 ],
+              ),
+              Card(
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: <Widget>[
+                      TextField(
+                        decoration:
+                            InputDecoration(labelText: 'Digite o Título'),
+                      ),
+                      TextField(
+                        decoration:
+                            InputDecoration(labelText: 'Digite o valor (R\$)'),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {},
+                            child: Text('Nova Transação'),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
               )
             ]));
   }
