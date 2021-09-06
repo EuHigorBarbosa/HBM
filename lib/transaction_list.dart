@@ -11,11 +11,11 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200,
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            ...transactionsInsertedForRendering.map((tr) {
+        height: 300,
+        child: ListView.builder(
+            itemCount: transactionsInsertedForRendering.length,
+            itemBuilder: (ctx, index) {
+              final tr = transactionsInsertedForRendering[index];
               return Card(
                   child: Row(children: <Widget>[
                 // ==================== CONTAINER DOS NUMEROS
@@ -58,10 +58,6 @@ class TransactionList extends StatelessWidget {
                   ),
                 ]),
               ]));
-            }).toList(),
-          ],
-        ),
-      ),
-    );
+            }));
   }
 }
