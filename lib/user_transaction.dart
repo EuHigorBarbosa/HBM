@@ -23,30 +23,6 @@ class _TransactionUserState extends State<TransactionUser> {
       title: 'Conta de Luz',
       value: 211.30,
     ),
-    Transaction(
-      date: DateTime.now(),
-      id: 't3',
-      title: 'Conta de semvergonhice',
-      value: 211.30,
-    ),
-    Transaction(
-      date: DateTime.now(),
-      id: 't4',
-      title: 'Conta de Coach',
-      value: 211.30,
-    ),
-    Transaction(
-      date: DateTime.now(),
-      id: 't5',
-      title: 'Conta de telefone',
-      value: 211.30,
-    ),
-    Transaction(
-      date: DateTime.now(),
-      id: 't6',
-      title: 'Conta de agua',
-      value: 211.30,
-    ),
   ];
 // Aqui há uma declaração de um metodo que cria uma new variavel do
 // tipo transaction e depois adiciona ela a um atributo
