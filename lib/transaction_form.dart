@@ -10,6 +10,7 @@ class TransactionForm extends StatelessWidget {
   // O pai vai chamar o filho por meio de uma função que já está
   // declarada no pai.
   final void Function(String, double) funcaoAddNewTransactionOnSubmitUser;
+  //! Essa função tem o nome de onSubmit no arquivo do professor
   //ele construiu aqui um atributo variavel do tipo Function.
   //Esse atributo será utilizado no seu construtor. Então toda vez
   //que alguem quiser construir um Transaction_form ele vai ter que passar
