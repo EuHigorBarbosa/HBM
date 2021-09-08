@@ -12,6 +12,38 @@ class ExpensesApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: MyHomePage(),
+      //? Para demonstrar que eu sei mexer com themeData eu vou criar um
+      //? ThemeCentral para ExpesesApp, um tema central para form do tipo darkness
+      //? e passar pontualmente um estilo para texfild do tipo AzeretMono
+      theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          textTheme: ThemeData.light().textTheme.copyWith(
+                headline6: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+        ),
+
+        // Define the default brightness and colors.
+        brightness: Brightness.light,
+        primaryColor: Colors.red,
+        accentColor: Colors.red,
+
+        // Define the default font family.
+        fontFamily: 'Quicksand',
+
+        // Define the default TextTheme. Use this to specify the default
+        // text styling for headlines, titles, bodies of text, and more.
+        textTheme: const TextTheme(
+          headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+          headline6: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
+          bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'OpenSans'),
+
+          //mudando de tema dark/light : https://www.youtube.com/watch?v=SEXlV2t8Kn4
+        ),
+      ),
     );
   }
 }
@@ -50,6 +82,9 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     //Aqui há uma modificação do atributo da classe _TransactionUserState por meio de
     //uma adição.
+    Navigator.of(context).pop();
+    //Esse navigator serve para fechar o teclado quando clica no submit
+    //Existe uma explicação muito interessante na aula 116
   }
 
   String value = ''; //?retirar pois acho que isso não está sendo usado
@@ -60,6 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //Esse build context no argumento dela eu não entendo pra que, o prof que colocou
     showModalBottomSheet(
         context: context,
+        isScrollControlled: true,
         builder: (ctxAleatorio) {
           return TransactionForm(
               funcaoAddNewTransactionOnSubmitUser: _addTransaction);
@@ -72,7 +108,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Despesas Pessoais'),
+        title: Text(
+          'Despesas Pessoais',
+          // style: TextStyle(
+          //   fontFamily: 'OpenSans',
+          // ),
+        ),
         actions: <Widget>[
           IconButton(
             onPressed: () => _openTransactionFormModal(context),
@@ -85,7 +126,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
 //? ======================= COLUNA DO GRAFICO ===============
       body: ListView(
-        //crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
             color: Colors.pink,
@@ -98,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
             //width: double.infinity,
             child: Card(
               child: Text(
-                'Grafico',
+                'Grafico1',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
               elevation: 5,
