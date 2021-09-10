@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:registrofinanceiro/chart.dart';
 import 'package:registrofinanceiro/transaction_form.dart';
 
 import 'dart:math';
@@ -55,18 +56,43 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transactionsList = [
-    // Transaction(
-    //     date: DateTime.now(),
-    //     id: 't1',
-    //     title: 'Novo tênis de corrida',
-    //     value: 310.76),
-    // Transaction(
-    //   date: DateTime.now(),
-    //   id: 't2',
-    //   title: 'Conta de Luz',
-    //   value: 211.30,
-    // ),
+    Transaction(
+        date: DateTime.now().subtract(Duration(days: 33)),
+        id: 't0',
+        title: 'Novo tênis de corrida',
+        value: 310.76),
+    Transaction(
+        date: DateTime.now(),
+        id: 't1',
+        title: 'Novo tênis de corrida',
+        value: 1800),
+    Transaction(
+      date: DateTime.now().subtract(Duration(days: 3)),
+      id: 't2',
+      title: 'Despesa 1 de 3 dias atras',
+      value: 100,
+    ),
+    Transaction(
+      date: DateTime.now().subtract(Duration(days: 3)),
+      id: 't2',
+      title: 'despesa 2 de 3 dias atras',
+      value: 100,
+    ),
   ];
+
+//Esse getter vai ser responsável por passar as transações recentes para nosso
+//componente chart. A ideia é filtrar...de todas as transações que existem
+//eu mostrarei apenas as dos ultimos 7 dias.
+  List<Transaction> get _recentTransactions {
+    return _transactionsList.where((element) {
+      return element.date.isAfter(DateTime.now().subtract(
+        Duration(days: 7),
+        //Se a data for depois de uma data subtraida de 7 dias, então
+        // entra pois é depois de 7 dias atrás = dentro do período entre
+        //hoje e 7 dias atras.
+      ));
+    }).toList();
+  }
 
   dynamic _addTransaction(String argTitle, double argValue) {
     final newTransaction = Transaction(
@@ -127,26 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
 //? ======================= COLUNA DO GRAFICO ===============
       body: ListView(
         children: <Widget>[
-          Container(
-            color: Colors.pink,
-            //padding: EdgeInsets.all(10.0),
-            // margin: EdgeInsets.symmetric(
-            //   horizontal: 15,
-            //   vertical: 10,
-            // ),
-            //alignment: Alignment.center,
-            //width: double.infinity,
-            child: Card(
-              child: Text(
-                'Grafico1',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              elevation: 5,
-              //margin: EdgeInsets.all(4.0),
-              color: Colors.blue,
-              //borderOnForeground: false,
-            ),
-          ),
+          Chart(recentTransaction: _recentTransactions),
           //* =============== Eixo PRINCIPAL DOS CARDS dentro de Column ============
           TransactionList(transactionsInsertedForRendering: _transactionsList),
         ],
