@@ -5,6 +5,10 @@ import 'package:registrofinanceiro/transaction.dart';
 
 class Chart extends StatelessWidget {
   final List<Transaction> recentTransaction;
+  final dynamic majorNumber = NumberFormat.compact();
+  final dynamic formatTresMaisDois = NumberFormat('##0.00', 'pt_BR');
+  final dynamic formatQuatroMaisUm = NumberFormat('#,##0.0', 'pt_BR');
+  final dynamic formatCincoMaisZero = NumberFormat('####0', 'pt_BR');
 
   Chart({required this.recentTransaction});
 
@@ -36,7 +40,7 @@ class Chart extends StatelessWidget {
           'value': totalSum,
         };
       },
-    );
+    ).reversed.toList();
   }
 
   double get _weekTotalValue {
@@ -44,11 +48,6 @@ class Chart extends StatelessWidget {
       return sum + (tr['value'] as double);
     });
   }
-
-  dynamic majorNumber = NumberFormat.compact();
-  dynamic formatTresMaisDois = NumberFormat('##0.00', 'pt_BR');
-  dynamic formatQuatroMaisUm = NumberFormat('#,##0.0', 'pt_BR');
-  dynamic formatCincoMaisZero = NumberFormat('####0', 'pt_BR');
 
   String formatedDoubledValue(double value) {
     if (value > 99999) {

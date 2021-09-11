@@ -33,6 +33,40 @@ class TransactionList extends StatelessWidget {
                 itemBuilder: (ctx, index) {
                   final tr = transactionsInsertedForRendering[index];
                   return Card(
+                    elevation: 5,
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        radius: 30,
+                        child: Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: FittedBox(
+                            child: Text(
+                              'R\$${tr.formatedStringValue}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        tr.title,
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      subtitle: Text(DateFormat('d MMM y').format(tr.date),
+                          style: TextStyle(
+                            color: Colors.grey,
+                          )),
+                    ),
+                  );
+                }));
+  }
+}
+
+/*
+Card(
                       child: Row(children: <Widget>[
                     // ==================== CONTAINER DOS NUMEROS
                     Container(
@@ -77,6 +111,4 @@ class TransactionList extends StatelessWidget {
                           ),
                         ]),
                   ]));
-                }));
-  }
-}
+*/
