@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class TransactionForm extends StatefulWidget {
   final void Function(String, double) funcaoAddNewTransactionOnSubmitUser;
@@ -55,10 +56,24 @@ class _TransactionFormState extends State<TransactionForm> {
                 controller: titleController,
                 autofocus: true,
                 onSubmitted: (_) => _submitForm(),
-                decoration: InputDecoration(labelText: 'Digite o Título'),
+                decoration: InputDecoration(
+                  // border: UnderlineInputBorder(
+                  //   borderSide: BorderSide(color: Colors.green, width: 3.0),
+                  // ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.yellow, width: 7.0),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green, width: 3.0),
+                  ),
+                  labelText: 'Digite o Título',
+
+                  //enabledBorder: OutlineInputBorder(),
+                ),
               ),
               TextField(
                 style: Theme.of(context).textTheme.headline6,
+
                 //onChanged: (newValue) => value = newValue,
                 controller: valueController,
                 onSubmitted: (value) => _submitForm(),
@@ -67,16 +82,21 @@ class _TransactionFormState extends State<TransactionForm> {
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 //Esse comando cria o teclado númerico e faz com que funcione tanto
                 //no android quantono ios
-                decoration: InputDecoration(labelText: 'Digite o valor (R\$)'),
+                decoration: InputDecoration(
+                  labelText: 'Digite o valor (R\$)',
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton(
-                    onPressed: _submitForm,
-                    child: Text('Nova Transação'),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _submitForm,
+                      child: Text('Nova Transação'),
+                    ),
+                  ],
+                ),
               )
             ],
           ),

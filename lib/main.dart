@@ -55,7 +55,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _transactionsList = [
+  final List<Transaction> _transactionListBancoDeDadosInicial = [
     Transaction(
         date: DateTime.now().subtract(Duration(days: 33)),
         id: 't0',
@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
         date: DateTime.now(),
         id: 't1',
         title: 'Novo tênis de corrida',
-        value: 1800),
+        value: 180000),
     Transaction(
       date: DateTime.now().subtract(Duration(days: 3)),
       id: 't2',
@@ -84,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
 //componente chart. A ideia é filtrar...de todas as transações que existem
 //eu mostrarei apenas as dos ultimos 7 dias.
   List<Transaction> get _recentTransactions {
-    return _transactionsList.where((element) {
+    return _transactionListBancoDeDadosInicial.where((element) {
       return element.date.isAfter(DateTime.now().subtract(
         Duration(days: 7),
         //Se a data for depois de uma data subtraida de 7 dias, então
@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //? --- Esse set serve para atualizar o estado do componente stateful que é o TransactionUser
     //? -- Logicamente será chamado depois de haver sido criado um objeto do tipo List<Transaction>
     setState(() {
-      _transactionsList.add(newTransaction);
+      _transactionListBancoDeDadosInicial.add(newTransaction);
     });
     //Aqui há uma modificação do atributo da classe _TransactionUserState por meio de
     //uma adição.
@@ -155,7 +155,9 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           Chart(recentTransaction: _recentTransactions),
           //* =============== Eixo PRINCIPAL DOS CARDS dentro de Column ============
-          TransactionList(transactionsInsertedForRendering: _transactionsList),
+          TransactionList(
+              transactionsInsertedForRendering:
+                  _transactionListBancoDeDadosInicial),
         ],
       ),
       floatingActionButton: FloatingActionButton(

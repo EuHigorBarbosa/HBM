@@ -24,11 +24,11 @@ class TransactionList extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(0),
                     child: Image.asset('assets/images/hhh.jpg'),
+                    //caso não tenha elemento dentro do transactionList a imagem deve aparecer
                   )
                 ],
               )
             : ListView.builder(
-                //caso não tenha elemento dentro do transactionList a imagem deve aparecer
                 itemCount: transactionsInsertedForRendering.length,
                 itemBuilder: (ctx, index) {
                   final tr = transactionsInsertedForRendering[index];
@@ -49,7 +49,7 @@ class TransactionList extends StatelessWidget {
                       padding: EdgeInsets.all(30),
                       // ================   NUMEROS DO PREÇO  =======
                       child: Text(
-                        'R\$${tr.value.toStringAsFixed(2)}',
+                        'R\$${tr.formatedStringValue}',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,

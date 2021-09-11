@@ -30,6 +30,7 @@ class Chart extends StatelessWidget {
 
         print('A letra do dia é: ${DateFormat.E().format(weekDay)[0]}');
         print('O valor da soma do dia é: $totalSum');
+
         return {
           'day': DateFormat.E().format(weekDay)[0], //pega a primeira letra
           'value': totalSum,
@@ -42,6 +43,27 @@ class Chart extends StatelessWidget {
     return groupedTransactions.fold(0.0, (sum, tr) {
       return sum + (tr['value'] as double);
     });
+  }
+
+  dynamic majorNumber = NumberFormat.compact();
+  dynamic formatTresMaisDois = NumberFormat('##0.00', 'pt_BR');
+  dynamic formatQuatroMaisUm = NumberFormat('#,##0.0', 'pt_BR');
+  dynamic formatCincoMaisZero = NumberFormat('####0', 'pt_BR');
+
+  String formatedDoubledValue(double value) {
+    if (value > 99999) {
+      return majorNumber.format(double.tryParse(value.toStringAsFixed(0)));
+    } else if (value > 9999.9) {
+      return formatCincoMaisZero
+          .format(double.tryParse(value.toStringAsFixed(0)));
+    } else if (value > 999.99) {
+      return formatQuatroMaisUm
+          .format(double.tryParse(value.toStringAsFixed(1)));
+    } else if (value > 0) {
+      return formatTresMaisDois
+          .format(double.tryParse(value.toStringAsFixed(2)));
+    } else
+      return 'Nada';
   }
   // List<double> get proporsionalReturn {
   //   return List.generate(7, (index) {
@@ -84,13 +106,15 @@ na 0 sermpre hoje now -6
 
     return Card(
       elevation: 6,
-      margin: EdgeInsets.all(20),
+      margin: EdgeInsets.all(10),
       child: Container(
         height: 100,
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text('${groupedTransactions[0]['day']}'),
@@ -98,17 +122,18 @@ na 0 sermpre hoje now -6
                       child: RotatedBox(
                     quarterTurns: 3,
                     child: LinearProgressIndicator(
+                      backgroundColor: Color.fromRGBO(220, 220, 220, 1),
+                      color: Theme.of(context).primaryColor,
                       value: (groupedTransactions[0]['value'] as double) /
                           _weekTotalValue,
-                      minHeight: 2,
+                      minHeight: 7,
                     ), // Is supposed to extend as far as possible
                   )),
-                  Text('${groupedTransactions[0]['value']}'),
+                  Text(formatedDoubledValue(
+                      groupedTransactions[0]['value'] as double)),
                 ],
               ),
-            ),
-            Expanded(
-              child: Column(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text('${groupedTransactions[1]['day']}'),
@@ -116,17 +141,18 @@ na 0 sermpre hoje now -6
                       child: RotatedBox(
                     quarterTurns: 3,
                     child: LinearProgressIndicator(
+                      backgroundColor: Color.fromRGBO(220, 220, 220, 1),
+                      color: Theme.of(context).primaryColor,
                       value: (groupedTransactions[1]['value'] as double) /
                           _weekTotalValue,
-                      minHeight: 2,
+                      minHeight: 7,
                     ), // Is supposed to extend as far as possible
                   )),
-                  Text('${groupedTransactions[1]['value']}'),
+                  Text(formatedDoubledValue(
+                      groupedTransactions[1]['value'] as double)),
                 ],
               ),
-            ),
-            Expanded(
-              child: Column(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text('${groupedTransactions[2]['day']}'),
@@ -134,35 +160,40 @@ na 0 sermpre hoje now -6
                       child: RotatedBox(
                     quarterTurns: 3,
                     child: LinearProgressIndicator(
+                      backgroundColor: Color.fromRGBO(220, 220, 220, 1),
+                      color: Theme.of(context).primaryColor,
                       value: (groupedTransactions[2]['value'] as double) /
                           _weekTotalValue,
-                      minHeight: 2,
+                      minHeight: 7,
                     ), // Is supposed to extend as far as possible
                   )),
-                  Text('${groupedTransactions[2]['value']}'),
+                  Text(formatedDoubledValue(
+                      groupedTransactions[2]['value'] as double)),
                 ],
               ),
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('${groupedTransactions[3]['day']}'),
-                  Expanded(
-                      child: RotatedBox(
-                    quarterTurns: 3,
-                    child: LinearProgressIndicator(
-                      value: (groupedTransactions[3]['value'] as double) /
-                          _weekTotalValue,
-                      minHeight: 2,
-                    ), // Is supposed to extend as far as possible
-                  )),
-                  Text('${groupedTransactions[3]['value']}'),
-                ],
+              Flexible(
+                fit: FlexFit.loose,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('${groupedTransactions[3]['day']}'),
+                    Expanded(
+                        child: RotatedBox(
+                      quarterTurns: 3,
+                      child: LinearProgressIndicator(
+                        backgroundColor: Color.fromRGBO(220, 220, 220, 1),
+                        color: Theme.of(context).primaryColor,
+                        value: (groupedTransactions[3]['value'] as double) /
+                            _weekTotalValue,
+                        minHeight: 7,
+                      ), // Is supposed to extend as far as possible
+                    )),
+                    Text(formatedDoubledValue(
+                        groupedTransactions[3]['value'] as double)),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: Column(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text('${groupedTransactions[4]['day']}'),
@@ -170,17 +201,18 @@ na 0 sermpre hoje now -6
                       child: RotatedBox(
                     quarterTurns: 3,
                     child: LinearProgressIndicator(
+                      backgroundColor: Color.fromRGBO(220, 220, 220, 1),
+                      color: Theme.of(context).primaryColor,
                       value: (groupedTransactions[4]['value'] as double) /
                           _weekTotalValue,
-                      minHeight: 2,
+                      minHeight: 7,
                     ), // Is supposed to extend as far as possible
                   )),
-                  Text('${groupedTransactions[4]['value']}'),
+                  Text(formatedDoubledValue(
+                      groupedTransactions[4]['value'] as double)),
                 ],
               ),
-            ),
-            Expanded(
-              child: Column(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text('${groupedTransactions[5]['day']}'),
@@ -188,17 +220,18 @@ na 0 sermpre hoje now -6
                       child: RotatedBox(
                     quarterTurns: 3,
                     child: LinearProgressIndicator(
+                      backgroundColor: Color.fromRGBO(220, 220, 220, 1),
+                      color: Theme.of(context).primaryColor,
                       value: (groupedTransactions[5]['value'] as double) /
                           _weekTotalValue,
-                      minHeight: 2,
+                      minHeight: 7,
                     ), // Is supposed to extend as far as possible
                   )),
-                  Text('${groupedTransactions[5]['value']}'),
+                  Text(formatedDoubledValue(
+                      groupedTransactions[5]['value'] as double)),
                 ],
               ),
-            ),
-            Expanded(
-              child: Column(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text('${groupedTransactions[6]['day']}'),
@@ -206,16 +239,19 @@ na 0 sermpre hoje now -6
                       child: RotatedBox(
                     quarterTurns: 3,
                     child: LinearProgressIndicator(
+                      backgroundColor: Color.fromRGBO(220, 220, 220, 1),
+                      color: Theme.of(context).primaryColor,
                       value: (groupedTransactions[6]['value'] as double) /
                           _weekTotalValue,
-                      minHeight: 2,
+                      minHeight: 7,
                     ), // Is supposed to extend as far as possible
                   )),
-                  Text('${groupedTransactions[6]['value']}'),
+                  Text(formatedDoubledValue(
+                      groupedTransactions[6]['value'] as double)),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
