@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 
 class TransactionForm extends StatefulWidget {
   final void Function(String, double) funcaoAddNewTransactionOnSubmitUser;
@@ -16,16 +17,16 @@ class TransactionForm extends StatefulWidget {
 }
 
 class _TransactionFormState extends State<TransactionForm> {
-  final titleController = TextEditingController();
-
-  final valueController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _valueController = TextEditingController();
+  DateTime _selectedDate = DateTime.now();
 
   _submitForm() {
     //Como submeteremos os dados mais de uma vez no programa vamos criar essa função
     //quando o user apertar o botão, então o construtor de
     // TransactionForm será chamado.
-    final title = titleController.text;
-    final value = double.tryParse(valueController.text) ?? 0.0;
+    final title = _titleController.text;
+    final value = double.tryParse(_valueController.text) ?? 0.0;
 
     //Se acontecer de os valores dos textFields não forem válidos retorna nada.
     if (title.isEmpty || value <= 0) {
@@ -38,6 +39,25 @@ class _TransactionFormState extends State<TransactionForm> {
     //? TransactionForm. Essa comunicação entre classes possibilita o uso de
     //? qualquer atributo da classe que não é a state. Essa comunicação
     //? se dá por meio dessa palavrinha widget. e aí vc coloca o atributo que quiser
+  }
+
+  _showDatePicker() {
+    //o contex é recebido por herança assim como o widget. que é
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2019),
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      print('Executado dentro da tela!');
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    });
+    print('Executado!!!!');
   }
 
   @override
@@ -53,7 +73,7 @@ class _TransactionFormState extends State<TransactionForm> {
               TextField(
                 //onChanged: (newTitle) => title = newTitle,
                 //Não teremos o evento onCheged pois vou usar o controller
-                controller: titleController,
+                controller: _titleController,
                 autofocus: true,
                 onSubmitted: (_) => _submitForm(),
                 decoration: InputDecoration(
@@ -75,7 +95,7 @@ class _TransactionFormState extends State<TransactionForm> {
                 style: Theme.of(context).textTheme.headline6,
 
                 //onChanged: (newValue) => value = newValue,
-                controller: valueController,
+                controller: _valueController,
                 onSubmitted: (value) => _submitForm(),
                 //!MALANDRAGEM - uso da função sem parametro num lugar que pede parametro
                 //! Tambem funciona se utilizarmos (_) => _submitForm()
@@ -90,10 +110,12 @@ class _TransactionFormState extends State<TransactionForm> {
                 height: 70,
                 child: Row(
                   children: <Widget>[
-                    Text('Nenhuma data selecionada'),
+                    Text(_selectedDate == null
+                        ? 'Nenhuma data selecionada'
+                        : 'Data selecionada: ${DateFormat('dd/MM/y').format(_selectedDate)}'),
                     ElevatedButton(
                       child: Text('Nova data'),
-                      onPressed: _submitForm,
+                      onPressed: _showDatePicker,
                       style: ElevatedButton.styleFrom(
                         primary: Colors.purple,
                         padding:

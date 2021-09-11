@@ -29,7 +29,7 @@ class ExpensesApp extends StatelessWidget {
         //* ================= textTheme ======================
         textTheme: const TextTheme(
           button: TextStyle(
-              fontSize: 14.0, fontStyle: FontStyle.italic, color: Colors.blue),
+              fontSize: 14.0, fontStyle: FontStyle.italic, color: Colors.white),
           caption: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
           subtitle1: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
           subtitle2: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
