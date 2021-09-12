@@ -66,9 +66,9 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  dynamic _addTransaction(String argTitle, double argValue) {
+  dynamic _addTransaction(String argTitle, double argValue, DateTime date) {
     final newTransaction = Transaction(
-        date: DateTime.now(),
+        date: date,
         id: Random().nextDouble().toString(),
         title: argTitle,
         value: argValue);

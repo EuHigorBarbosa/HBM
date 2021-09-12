@@ -3,7 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 class TransactionForm extends StatefulWidget {
-  final void Function(String, double) funcaoAddNewTransactionOnSubmitUser;
+  final void Function(String, double, DateTime)
+      funcaoAddNewTransactionOnSubmitUser;
   //! Essa função tem o nome de onSubmit no arquivo do professor
   //ele construiu aqui um atributo variavel do tipo Function.
   //Esse atributo será utilizado no seu construtor. Então toda vez
@@ -29,11 +30,11 @@ class _TransactionFormState extends State<TransactionForm> {
     final value = double.tryParse(_valueController.text) ?? 0.0;
 
     //Se acontecer de os valores dos textFields não forem válidos retorna nada.
-    if (title.isEmpty || value <= 0) {
+    if (title.isEmpty || value <= 0 || _selectedDate == null) {
       return;
     }
 
-    widget.funcaoAddNewTransactionOnSubmitUser(title, value);
+    widget.funcaoAddNewTransactionOnSubmitUser(title, value, _selectedDate);
     //? Pra usar essa função funcaoAddNewTransactionOnSubmitUser aqui eu preciso
     //? de uma comunicação entre a classe _TransactionFormState e
     //? TransactionForm. Essa comunicação entre classes possibilita o uso de
