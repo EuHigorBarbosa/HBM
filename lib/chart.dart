@@ -14,7 +14,7 @@ class Chart extends StatelessWidget {
 
 //Essa funcão é do tipo getter
   List<Map<String, Object>> get groupedTransactions {
-    return List.generate(
+    List<Map<String, Object>> saida = List.generate(
       7,
       (index) {
         final weekDay = DateTime.now().subtract(
@@ -41,6 +41,8 @@ class Chart extends StatelessWidget {
         };
       },
     ).reversed.toList();
+    print(saida);
+    return saida;
   }
 
   double get _weekTotalValue {
@@ -123,8 +125,10 @@ na 0 sermpre hoje now -6
                     child: LinearProgressIndicator(
                       backgroundColor: Color.fromRGBO(220, 220, 220, 1),
                       color: Theme.of(context).primaryColor,
-                      value: (groupedTransactions[0]['value'] as double) /
-                          _weekTotalValue,
+                      value: (_weekTotalValue == 0)
+                          ? 0.0
+                          : (groupedTransactions[0]['value'] as double) /
+                              _weekTotalValue,
                       minHeight: 7,
                     ), // Is supposed to extend as far as possible
                   )),
@@ -142,8 +146,10 @@ na 0 sermpre hoje now -6
                     child: LinearProgressIndicator(
                       backgroundColor: Color.fromRGBO(220, 220, 220, 1),
                       color: Theme.of(context).primaryColor,
-                      value: (groupedTransactions[1]['value'] as double) /
-                          _weekTotalValue,
+                      value: (_weekTotalValue == 0)
+                          ? 0.0
+                          : (groupedTransactions[1]['value'] as double) /
+                              _weekTotalValue,
                       minHeight: 7,
                     ), // Is supposed to extend as far as possible
                   )),
@@ -161,8 +167,10 @@ na 0 sermpre hoje now -6
                     child: LinearProgressIndicator(
                       backgroundColor: Color.fromRGBO(220, 220, 220, 1),
                       color: Theme.of(context).primaryColor,
-                      value: (groupedTransactions[2]['value'] as double) /
-                          _weekTotalValue,
+                      value: (_weekTotalValue == 0)
+                          ? 0.0
+                          : (groupedTransactions[2]['value'] as double) /
+                              _weekTotalValue,
                       minHeight: 7,
                     ), // Is supposed to extend as far as possible
                   )),
@@ -182,8 +190,10 @@ na 0 sermpre hoje now -6
                       child: LinearProgressIndicator(
                         backgroundColor: Color.fromRGBO(220, 220, 220, 1),
                         color: Theme.of(context).primaryColor,
-                        value: (groupedTransactions[3]['value'] as double) /
-                            _weekTotalValue,
+                        value: (_weekTotalValue == 0)
+                            ? 0.0
+                            : (groupedTransactions[3]['value'] as double) /
+                                _weekTotalValue,
                         minHeight: 7,
                       ), // Is supposed to extend as far as possible
                     )),
@@ -202,8 +212,10 @@ na 0 sermpre hoje now -6
                     child: LinearProgressIndicator(
                       backgroundColor: Color.fromRGBO(220, 220, 220, 1),
                       color: Theme.of(context).primaryColor,
-                      value: (groupedTransactions[4]['value'] as double) /
-                          _weekTotalValue,
+                      value: (_weekTotalValue == 0)
+                          ? 0.0
+                          : (groupedTransactions[4]['value'] as double) /
+                              _weekTotalValue,
                       minHeight: 7,
                     ), // Is supposed to extend as far as possible
                   )),
@@ -221,8 +233,10 @@ na 0 sermpre hoje now -6
                     child: LinearProgressIndicator(
                       backgroundColor: Color.fromRGBO(220, 220, 220, 1),
                       color: Theme.of(context).primaryColor,
-                      value: (groupedTransactions[5]['value'] as double) /
-                          _weekTotalValue,
+                      value: (_weekTotalValue == 0)
+                          ? 0.0
+                          : (groupedTransactions[5]['value'] as double) /
+                              _weekTotalValue,
                       minHeight: 7,
                     ), // Is supposed to extend as far as possible
                   )),
@@ -240,8 +254,10 @@ na 0 sermpre hoje now -6
                     child: LinearProgressIndicator(
                       backgroundColor: Color.fromRGBO(220, 220, 220, 1),
                       color: Theme.of(context).primaryColor,
-                      value: (groupedTransactions[6]['value'] as double) /
-                          _weekTotalValue,
+                      value: (_weekTotalValue == 0)
+                          ? 0.0
+                          : (groupedTransactions[6]['value'] as double) /
+                              _weekTotalValue,
                       minHeight: 7,
                     ), // Is supposed to extend as far as possible
                   )),

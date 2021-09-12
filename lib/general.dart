@@ -85,6 +85,14 @@ class _MyHomePageState extends State<MyHomePage> {
     //Existe uma explicação muito interessante na aula 116
   }
 
+  _removeTransaction(String idInput) {
+    setState(() {
+      //Esse setState vai modificar o estado da lista quando removermos o dado
+      _transactionListBancoDeDadosInicial
+          .removeWhere((element) => element.id == idInput);
+    });
+  }
+
   String value = ''; //?retirar pois acho que isso não está sendo usado
 
   _openTransactionFormModal(BuildContext context) {
@@ -104,32 +112,48 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Despesas Pessoais',
-          // style: TextStyle(
-          //   fontFamily: 'OpenSans',
-          // ),
-        ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () => _openTransactionFormModal(context),
-            //! Eu não tenho a minima noção do que é o uso do context aqui e pq funcionou
-            //! sendo que
-            icon: Icon(Icons.add),
-          ),
-        ],
+    final appBarCriada = AppBar(
+      title: Text(
+        'Despesas Pessoais',
+        // style: TextStyle(
+        //   fontFamily: 'OpenSans',
+        // ),
       ),
+      actions: <Widget>[
+        IconButton(
+          onPressed: () => _openTransactionFormModal(context),
+          //! Eu não tenho a minima noção do que é o uso do context aqui e pq funcionou
+          //! sendo que
+          icon: Icon(Icons.add),
+        ),
+      ],
+    );
+
+    final availableHeight = MediaQuery.of(context).size.height -
+        appBarCriada.preferredSize.height -
+        MediaQuery.of(context).padding.top;
+    return Scaffold(
+      appBar: appBarCriada,
 
 //? ======================= COLUNA DO GRAFICO ===============
       body: ListView(
         children: <Widget>[
-          Chart(recentTransaction: _recentTransactions),
+          Container(
+            height: availableHeight * 0.2,
+            child: Chart(recentTransaction: _recentTransactions),
+          ),
+
           //* =============== Eixo PRINCIPAL DOS CARDS dentro de Column ============
-          TransactionList(
-              transactionsInsertedForRendering:
-                  _transactionListBancoDeDadosInicial),
+          Container(
+            height: availableHeight * 0.8,
+            child: TransactionList(
+                transactionsInsertedForRendering:
+                    _transactionListBancoDeDadosInicial,
+                functionRemove: _removeTransaction),
+          ),
+          //o componente pai General passa para o filho TransactionList
+          //uma função que será usada pelo filho quando houver o evento
+          //que no caso é o apertar do icone delete_forever na lista
         ],
       ),
       floatingActionButton: FloatingActionButton(

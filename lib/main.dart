@@ -48,7 +48,13 @@ class ExpensesApp extends StatelessWidget {
         // text styling for headlines, titles, bodies of text, and more.
         // Define the default brightness and colors.
 
-        //* ================= colorTheme ======================
+        //* ================= colorTheme Gerais ======================
+        primaryColor: Colors.red,
+        //accentColor: Colors.red,
+        secondaryHeaderColor: Colors.redAccent,
+        errorColor: Colors.redAccent,
+
+        //* ================= colorTheme Especificas ======================
 
         buttonBarTheme: ButtonBarThemeData(),
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -57,9 +63,6 @@ class ExpensesApp extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
           textStyle: Theme.of(context).textTheme.headline6,
         )),
-
-        primaryColor: Colors.red,
-        //accentColor: Colors.red,
 
         //* ================== Brilho Theme =====================
         brightness: Brightness.light,

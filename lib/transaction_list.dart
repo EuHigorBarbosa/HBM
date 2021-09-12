@@ -5,63 +5,68 @@ import 'transaction.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactionsInsertedForRendering;
+  final void Function(String) functionRemove;
 
-  TransactionList({required this.transactionsInsertedForRendering});
+  TransactionList(
+      {required this.transactionsInsertedForRendering,
+      required this.functionRemove});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: 500,
-        child: transactionsInsertedForRendering.isEmpty
-            ? Column(
-                children: [
-                  SizedBox(height: 20),
-                  Text(
-                    'Nenhuma despesa lançada',
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.all(0),
-                    child: Image.asset('assets/images/hhh.jpg'),
-                    //caso não tenha elemento dentro do transactionList a imagem deve aparecer
-                  )
-                ],
+    return transactionsInsertedForRendering.isEmpty
+        ? Column(
+            children: [
+              SizedBox(height: 20),
+              Text(
+                'Nenhuma despesa lançada',
+                style: Theme.of(context).textTheme.headline5,
+              ),
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.all(0),
+                child: Image.asset('assets/images/hhh.jpg'),
+                //caso não tenha elemento dentro do transactionList a imagem deve aparecer
               )
-            : ListView.builder(
-                itemCount: transactionsInsertedForRendering.length,
-                itemBuilder: (ctx, index) {
-                  final tr = transactionsInsertedForRendering[index];
-                  return Card(
-                    elevation: 5,
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        radius: 30,
-                        child: Padding(
-                          padding: const EdgeInsets.all(6.0),
-                          child: FittedBox(
-                            child: Text(
-                              'R\$${tr.formatedStringValue}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                                color: Colors.white,
-                              ),
+            ],
+          )
+        : ListView.builder(
+            itemCount: transactionsInsertedForRendering.length,
+            itemBuilder: (ctx, index) {
+              final tr = transactionsInsertedForRendering[index];
+              return Card(
+                elevation: 5,
+                child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: FittedBox(
+                          child: Text(
+                            'R\$${tr.formatedStringValue}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: Colors.white,
                             ),
                           ),
                         ),
                       ),
-                      title: Text(
-                        tr.title,
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                      subtitle: Text(DateFormat('d MMM y').format(tr.date),
-                          style: TextStyle(
-                            color: Colors.grey,
-                          )),
                     ),
-                  );
-                }));
+                    title: Text(
+                      tr.title,
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    subtitle: Text(DateFormat('d MMM y').format(tr.date),
+                        style: TextStyle(
+                          color: Colors.grey,
+                        )),
+                    trailing: IconButton(
+                        onPressed: () => functionRemove(tr.id),
+                        //! ele chama sem parametro () uma função que requer parametro....isso é sensacional
+                        icon: Icon(Icons.delete_forever),
+                        color: Theme.of(context).errorColor)),
+              );
+            });
   }
 }
 
