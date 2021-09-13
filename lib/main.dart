@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:registrofinanceiro/general.dart';
 
 main() => runApp(ExpensesApp());
@@ -6,6 +7,11 @@ main() => runApp(ExpensesApp());
 class ExpensesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    //Essa classe SystemChrome é utilizada para que você não deixe sua
+    //aplicação girar a tela pra o modo landscape
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
     return MaterialApp(
       // Remove the debug banner
       debugShowCheckedModeBanner: false,
@@ -45,11 +51,11 @@ class ExpensesApp extends StatelessWidget {
           bodyText1: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
           headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
           headline2: TextStyle(
-              fontSize: 14.0 * MediaQuery.textScaleFactorOf(context),
-              fontStyle: FontStyle.italic),
+              fontSize: 10.0 * MediaQuery.textScaleFactorOf(context),
+              fontStyle: FontStyle.normal),
           headline3: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
           headline4: TextStyle(
-              fontSize: 14.0 * MediaQuery.textScaleFactorOf(context),
+              fontSize: 12.0 * MediaQuery.textScaleFactorOf(context),
               fontStyle: FontStyle.italic),
           headline5: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
           headline6: TextStyle(
@@ -66,7 +72,7 @@ class ExpensesApp extends StatelessWidget {
         //* ================= colorTheme Gerais ======================
         primaryColor: Colors.red,
         //accentColor: Colors.red,
-        secondaryHeaderColor: Colors.redAccent,
+        secondaryHeaderColor: Colors.grey,
         errorColor: Colors.redAccent,
 
         //* ================= colorTheme Especificas ======================
