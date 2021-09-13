@@ -7,6 +7,9 @@ class ExpensesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // Remove the debug banner
+      debugShowCheckedModeBanner: false,
+      title: "Despesas Pessoais HBM",
       home: MyHomePage(),
       //? Para demonstrar que eu sei mexer com themeData eu vou criar um
       //? ThemeCentral para ExpesesApp, um tema central para form do tipo darkness
@@ -27,22 +30,34 @@ class ExpensesApp extends StatelessWidget {
         fontFamily: 'Quicksand',
 
         //* ================= textTheme ======================
-        textTheme: const TextTheme(
+        //todo par é variavel com textscale, todo impar é fixo
+        textTheme: TextTheme(
           button: TextStyle(
               fontSize: 14.0, fontStyle: FontStyle.italic, color: Colors.white),
           caption: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
           subtitle1: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
-          subtitle2: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
-          bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'OpenSans'),
+          subtitle2: TextStyle(
+              fontSize: 14.0 * MediaQuery.textScaleFactorOf(context),
+              fontStyle: FontStyle.italic),
+          bodyText2: TextStyle(
+              fontSize: 14.0 * MediaQuery.textScaleFactorOf(context),
+              fontFamily: 'OpenSans'),
           bodyText1: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
           headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-          headline2: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
+          headline2: TextStyle(
+              fontSize: 14.0 * MediaQuery.textScaleFactorOf(context),
+              fontStyle: FontStyle.italic),
           headline3: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
-          headline4: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
+          headline4: TextStyle(
+              fontSize: 14.0 * MediaQuery.textScaleFactorOf(context),
+              fontStyle: FontStyle.italic),
           headline5: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
-          headline6: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
+          headline6: TextStyle(
+              fontSize: 14.0 * MediaQuery.textScaleFactorOf(context),
+              fontStyle: FontStyle.italic),
           overline: TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
         ),
+        //fontSize: 18 * MediaQuery.textScaleFactorOf(context)
         //mudando de tema dark/light : https://www.youtube.com/watch?v=SEXlV2t8Kn4
         // Define the default TextTheme. Use this to specify the default
         // text styling for headlines, titles, bodies of text, and more.
