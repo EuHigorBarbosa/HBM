@@ -159,11 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
 
-    final availableHeightPortrait = MediaQuery.of(context).size.height -
-        appBarCriada.preferredSize.height -
-        MediaQuery.of(context).padding.top;
-
-    final availableHeightLandscape = MediaQuery.of(context).size.height -
+    var availableHeight = MediaQuery.of(context).size.height -
         appBarCriada.preferredSize.height -
         MediaQuery.of(context).padding.top;
 
@@ -180,17 +176,21 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: appBarCriada,
       body: LayoutBuilder(builder: (context, constraints) {
         if (constraints.maxWidth < 600) {
+          availableHeight = MediaQuery.of(context).size.height -
+              appBarCriada.preferredSize.height -
+              MediaQuery.of(context).padding.top;
+
           //? ======================= COLUNA DO GRAFICO P PHONE ===============
           return ListView(
             children: <Widget>[
               Container(
-                height: availableHeightPortrait * 0.2,
+                height: availableHeight * 0.2,
                 child: Chart(recentTransaction: _recentTransactions),
               ),
               categoryDivider(),
               //* =============== COLUNA DO LISTVIEW PHONE ============
               Container(
-                height: availableHeightPortrait * 0.8,
+                height: availableHeight * 0.8,
                 child: TransactionList(
                     transactionsInsertedForRendering:
                         _transactionListBancoDeDadosInicial,
@@ -202,42 +202,37 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           );
         } else {
+          availableHeight = MediaQuery.of(context).size.height -
+              appBarCriada.preferredSize.height -
+              MediaQuery.of(context).padding.top;
           //? Sendo LANDSCAPE - Large screens (tablet on landscape mode, desktop, TV)
 
           //? ============== COLUNA DO GRAFICO PARA LANDSCAPE ====================
-          return Column(
+          return ListView(
+            scrollDirection: Axis.horizontal,
             children: [
-              Container(
-                height: availableHeightPortrait * 0.4,
-                width: 600,
-                child: Chart(recentTransaction: _recentTransactions),
-              ),
-              Container(
-                height: 50,
-                width: 600,
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: Padding(
-                    padding: const EdgeInsets.all(0),
-                    child: Image.asset('assets/images/hhh.jpg'),
-                    //caso não tenha elemento dentro do transactionList a imagem deve aparecer
-                  ),
+              FittedBox(
+                fit: BoxFit.none,
+                child: Container(
+                  height: 200, //availableHeight * 0.2,
+                  width: 400,
+                  child: Chart(recentTransaction: _recentTransactions),
                 ),
               ),
-              ElevatedButton(
-                child: Text('Nova data'),
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.purple,
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                  textStyle: Theme.of(context).textTheme.headline6,
-                ),
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              Text('ola vc ai'),
-              Container(),
+              Flexible(
+                  fit: FlexFit.loose,
+                  child: Container(
+                    //height: 20000,
+                    width: 600,
+                    color: Colors.green,
+                    child: Flexible(
+                      fit: FlexFit.tight,
+                      child: TransactionList(
+                          transactionsInsertedForRendering:
+                              _transactionListBancoDeDadosInicial,
+                          functionRemove: _removeTransaction),
+                    ),
+                  )),
             ],
           );
         }
@@ -250,3 +245,38 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+/*
+Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Container(
+                    height: availableHeight * 0.4,
+                    width: 600,
+                    child: Chart(recentTransaction: _recentTransactions),
+                  ),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    child: TransactionList(
+                        transactionsInsertedForRendering:
+                            _transactionListBancoDeDadosInicial,
+                        functionRemove: _removeTransaction),
+                  ),
+
+                  // ElevatedButton(
+                  //   child: Text('Nova data'),
+                  //   onPressed: () {},
+                  //   style: ElevatedButton.styleFrom(
+                  //     primary: Colors.purple,
+                  //     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  //     textStyle: Theme.of(context).textTheme.headline6,
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: 40,
+                  // ),
+                  // Text('ola vc ai'),
+                  // Container(),
+                ],
+              ),
+*/

@@ -54,7 +54,6 @@ flutter:
     - assets/images/ggg.jpg
     - assets/images/hhh.jpg
     - assets/images/jpegcomp1.jpeg
-    - assets/images/balao.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
