@@ -162,6 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var availableHeight = MediaQuery.of(context).size.height -
         appBarCriada.preferredSize.height -
         MediaQuery.of(context).padding.top;
+    print('esse é o availableHeight DECALARACAO: $availableHeight');
 
     Container categoryDivider() {
       return Container(
@@ -175,11 +176,21 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: appBarCriada,
       body: LayoutBuilder(builder: (context, constraints) {
-        if (constraints.maxWidth < 600) {
-          availableHeight = MediaQuery.of(context).size.height -
-              appBarCriada.preferredSize.height -
-              MediaQuery.of(context).padding.top;
+        if (constraints.maxWidth < constraints.maxHeight) {
+          print(
+              'esse é o MediaQuery.of(context).size.height declaração: ${MediaQuery.of(context).size.height}');
+          print(
+              'esse é o MediaQuery.of(context).size.width PHONE: ${MediaQuery.of(context).size.width}}');
 
+          print(
+              'esse é o appBarCriada.preferredSize.height PHONE: ${appBarCriada.preferredSize.height}}');
+
+          print(
+              'esse é o MediaQuery.of(context).padding.top PHONE: ${MediaQuery.of(context).padding.top}}');
+          print('esse é o availableHeight PHONE: $availableHeight');
+          print('constraints.maxWidth : ${constraints.maxWidth}');
+          print('constraints.maxHeight : ${constraints.maxHeight}');
+          print('\n\n\n====================================');
           //? ======================= COLUNA DO GRAFICO P PHONE ===============
           return ListView(
             children: <Widget>[
@@ -187,6 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: availableHeight * 0.2,
                 child: Chart(recentTransaction: _recentTransactions),
               ),
+
               categoryDivider(),
               //* =============== COLUNA DO LISTVIEW PHONE ============
               Container(
@@ -202,9 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           );
         } else {
-          availableHeight = MediaQuery.of(context).size.height -
-              appBarCriada.preferredSize.height -
-              MediaQuery.of(context).padding.top;
+          print('esse é o availableHeight LANDSCAPE: $availableHeight');
           //? Sendo LANDSCAPE - Large screens (tablet on landscape mode, desktop, TV)
 
           //? ============== COLUNA DO GRAFICO PARA LANDSCAPE ====================
@@ -214,23 +224,26 @@ class _MyHomePageState extends State<MyHomePage> {
               FittedBox(
                 fit: BoxFit.none,
                 child: Container(
-                  height: 200, //availableHeight * 0.2,
-                  width: 400,
+                  height: availableHeight * 0.5,
+                  width: availableHeight * 1,
                   child: Chart(recentTransaction: _recentTransactions),
                 ),
               ),
               Flexible(
                   fit: FlexFit.loose,
                   child: Container(
-                    //height: 20000,
+                    height: availableHeight,
                     width: 600,
                     color: Colors.green,
                     child: Flexible(
                       fit: FlexFit.tight,
-                      child: TransactionList(
-                          transactionsInsertedForRendering:
-                              _transactionListBancoDeDadosInicial,
-                          functionRemove: _removeTransaction),
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: TransactionList(
+                            transactionsInsertedForRendering:
+                                _transactionListBancoDeDadosInicial,
+                            functionRemove: _removeTransaction),
+                      ),
                     ),
                   )),
             ],
