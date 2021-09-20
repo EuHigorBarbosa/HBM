@@ -9,8 +9,8 @@ class ExpensesApp extends StatelessWidget {
   Widget build(BuildContext context) {
     //Essa classe SystemChrome é utilizada para que você não deixe sua
     //aplicação girar a tela pra o modo landscape
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    // SystemChrome.setPreferredOrientations(
+    //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
     return MaterialApp(
       // Remove the debug banner

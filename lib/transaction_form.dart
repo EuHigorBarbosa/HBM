@@ -64,86 +64,93 @@ class _TransactionFormState extends State<TransactionForm> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.7,
-      child: Card(
-        elevation: 5,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: <Widget>[
-              TextField(
-                //onChanged: (newTitle) => title = newTitle,
-                //Não teremos o evento onCheged pois vou usar o controller
-                controller: _titleController,
-                autofocus: true,
-                onSubmitted: (_) => _submitForm(),
-                decoration: InputDecoration(
-                  // border: UnderlineInputBorder(
-                  //   borderSide: BorderSide(color: Colors.green, width: 3.0),
-                  // ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.yellow, width: 7.0),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green, width: 3.0),
-                  ),
-                  labelText: 'Digite o Título',
-
-                  //enabledBorder: OutlineInputBorder(),
-                ),
-              ),
-              TextField(
-                style: Theme.of(context).textTheme.headline6,
-
-                //onChanged: (newValue) => value = newValue,
-                controller: _valueController,
-                onSubmitted: (value) => _submitForm(),
-                //!MALANDRAGEM - uso da função sem parametro num lugar que pede parametro
-                //! Tambem funciona se utilizarmos (_) => _submitForm()
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                //Esse comando cria o teclado númerico e faz com que funcione tanto
-                //no android quantono ios
-                decoration: InputDecoration(
-                  labelText: 'Digite o valor (R\$)',
-                ),
-              ),
-              Container(
-                height: 70,
-                child: Row(
-                  children: <Widget>[
-                    Text(_selectedDate == null
-                        ? 'Nenhuma data selecionada'
-                        : 'Data selecionada: ${DateFormat('dd/MM/y').format(_selectedDate)}'),
-                    ElevatedButton(
-                      child: Text('Nova data'),
-                      onPressed: _showDatePicker,
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.purple,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                        textStyle: Theme.of(context).textTheme.headline6,
-                      ),
+      height: MediaQuery.of(context).viewInsets.bottom + 202,
+      child: SingleChildScrollView(
+        child: Card(
+          elevation: 5,
+          child: Padding(
+            padding: EdgeInsets.only(
+                left: 10,
+                right: 10,
+                top: 10,
+                bottom: 10.0 + MediaQuery.of(context).viewInsets.bottom),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                TextField(
+                  //onChanged: (newTitle) => title = newTitle,
+                  //Não teremos o evento onCheged pois vou usar o controller
+                  controller: _titleController,
+                  autofocus: true,
+                  onSubmitted: (_) => _submitForm(),
+                  decoration: InputDecoration(
+                    // border: UnderlineInputBorder(
+                    //   borderSide: BorderSide(color: Colors.green, width: 3.0),
+                    // ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.yellow, width: 7.0),
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      style: Theme.of(context).elevatedButtonTheme.style,
-                      onPressed: _submitForm,
-                      child: Text(
-                        'Nova Transação',
-                        style: Theme.of(context).textTheme.button,
-                      ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.green, width: 3.0),
                     ),
-                  ],
+                    labelText: 'Digite o Título',
+
+                    //enabledBorder: OutlineInputBorder(),
+                  ),
                 ),
-              )
-            ],
+                TextField(
+                  style: Theme.of(context).textTheme.headline6,
+
+                  //onChanged: (newValue) => value = newValue,
+                  controller: _valueController,
+                  onSubmitted: (value) => _submitForm(),
+                  //!MALANDRAGEM - uso da função sem parametro num lugar que pede parametro
+                  //! Tambem funciona se utilizarmos (_) => _submitForm()
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  //Esse comando cria o teclado númerico e faz com que funcione tanto
+                  //no android quantono ios
+                  decoration: InputDecoration(
+                    labelText: 'Digite o valor (R\$)',
+                  ),
+                ),
+                Container(
+                  height: 70,
+                  child: Row(
+                    children: <Widget>[
+                      Text(_selectedDate == null
+                          ? 'Nenhuma data selecionada'
+                          : 'Data selecionada: ${DateFormat('dd/MM/y').format(_selectedDate)}'),
+                      ElevatedButton(
+                        child: Text('Nova data'),
+                        onPressed: _showDatePicker,
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.purple,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 10),
+                          textStyle: Theme.of(context).textTheme.headline6,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        style: Theme.of(context).elevatedButtonTheme.style,
+                        onPressed: _submitForm,
+                        child: Text(
+                          'Nova Transação',
+                          style: Theme.of(context).textTheme.button,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

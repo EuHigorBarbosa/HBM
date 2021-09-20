@@ -60,11 +60,27 @@ class TransactionList extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.grey,
                         )),
-                    trailing: IconButton(
-                        onPressed: () => functionRemove(tr.id),
-                        //! ele chama sem parametro () uma função que requer parametro....isso é sensacional
-                        icon: Icon(Icons.delete_forever),
-                        color: Theme.of(context).errorColor)),
+                    trailing: MediaQuery.of(context).size.width > 450
+                        ? FittedBox(
+                            fit: BoxFit.contain,
+                            child: Row(
+                              children: [
+                                Text(
+                                  'remover',
+                                ),
+                                IconButton(
+                                    onPressed: () => functionRemove(tr.id),
+                                    //! ele chama sem parametro () uma função que requer parametro....isso é sensacional
+                                    icon: Icon(Icons.delete_forever),
+                                    color: Theme.of(context).errorColor)
+                              ],
+                            ),
+                          )
+                        : IconButton(
+                            onPressed: () => functionRemove(tr.id),
+                            //! ele chama sem parametro () uma função que requer parametro....isso é sensacional
+                            icon: Icon(Icons.delete_forever),
+                            color: Theme.of(context).errorColor)),
               );
             });
   }

@@ -127,35 +127,6 @@ class _MyHomePageState extends State<MyHomePage> {
           //! sendo que
           icon: Icon(Icons.add),
         ),
-        Row(
-          children: [
-            Text(
-              'LScape Mode',
-              style: Theme.of(context).textTheme.headline2,
-            ),
-            Switch.adaptive(
-              activeColor: Colors.white,
-              activeTrackColor: Colors.white,
-              value: false,
-              onChanged: (value) {
-                if (value == true) {
-                  setState(() => SystemChrome.setPreferredOrientations([
-                        DeviceOrientation.portraitUp,
-                        DeviceOrientation.portraitDown,
-                        DeviceOrientation.landscapeRight,
-                        DeviceOrientation.landscapeLeft
-                      ]));
-                }
-                if (value == false) {
-                  setState(() => SystemChrome.setPreferredOrientations([
-                        DeviceOrientation.portraitUp,
-                        DeviceOrientation.portraitDown,
-                      ]));
-                }
-              },
-            ),
-          ],
-        )
       ],
     );
 
@@ -219,35 +190,71 @@ class _MyHomePageState extends State<MyHomePage> {
 
           //? ============== COLUNA DO GRAFICO PARA LANDSCAPE ====================
           return ListView(
+            //shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             children: [
-              FittedBox(
-                fit: BoxFit.none,
+              Center(
                 child: Container(
-                  height: availableHeight * 0.5,
-                  width: availableHeight * 1,
+                  height: availableHeight * 0.6,
+                  width: availableHeight * 1.4,
                   child: Chart(recentTransaction: _recentTransactions),
                 ),
               ),
-              Flexible(
-                  fit: FlexFit.loose,
-                  child: Container(
-                    height: availableHeight,
-                    width: 600,
-                    color: Colors.green,
-                    child: Flexible(
-                      fit: FlexFit.tight,
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: TransactionList(
-                            transactionsInsertedForRendering:
-                                _transactionListBancoDeDadosInicial,
-                            functionRemove: _removeTransaction),
-                      ),
-                    ),
-                  )),
+              Container(
+                color: Colors.brown,
+                //height: 250,
+                width: 480,
+                child: TransactionList(
+                    transactionsInsertedForRendering:
+                        _transactionListBancoDeDadosInicial,
+                    functionRemove: _removeTransaction),
+              ),
+              // Expanded(
+              //   child: Container(
+              //     height: 20,
+              //     width: 50,
+              //     color: Colors.black,
+              //   ),
+              // ),
+              // Text('sssssss'),
             ],
           );
+          // TransactionList(
+          //     transactionsInsertedForRendering:
+          //         _transactionListBancoDeDadosInicial,
+          //     functionRemove: _removeTransaction),
+
+          // ListView(
+          //   scrollDirection: Axis.horizontal,
+          //   children: [
+          // FittedBox(
+          //   fit: BoxFit.none,
+          //   child: Container(
+          //     height: availableHeight * 0.5,
+          //     width: availableHeight * 1,
+          //     child: Chart(recentTransaction: _recentTransactions),
+          //   ),
+          // ),
+          // Flexible(
+          //     fit: FlexFit.loose,
+          //     child: Container(
+          //       height: availableHeight,
+          //       width: 600,
+          //       color: Colors.green,
+          //       child: Flexible(
+          //         fit: FlexFit.tight,
+          //         child: FittedBox(
+          //           fit: BoxFit.contain,
+          //           child: Text('hehehehe2hehehe'),
+          // TransactionList(
+          //     transactionsInsertedForRendering:
+          //         _transactionListBancoDeDadosInicial,
+          //     functionRemove: _removeTransaction),
+          //         ),
+          //       ),
+          //     )),
+          //   ],
+          // );
         }
       }),
       floatingActionButton: FloatingActionButton(
