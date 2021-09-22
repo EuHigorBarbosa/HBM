@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:registrofinanceiro/chart.dart';
 import 'package:registrofinanceiro/transaction_form.dart';
-
 import 'dart:math';
 import 'package:registrofinanceiro/transaction.dart';
 import 'package:registrofinanceiro/transaction_list.dart';
@@ -52,7 +51,6 @@ class _MyHomePageState extends State<MyHomePage> {
       value: 100,
     ),
   ];
-
 //Esse getter vai ser responsável por passar as transações recentes para nosso
 //componente chart. A ideia é filtrar...de todas as transações que existem
 //eu mostrarei apenas as dos ultimos 7 dias.
@@ -73,7 +71,6 @@ class _MyHomePageState extends State<MyHomePage> {
         id: Random().nextDouble().toString(),
         title: argTitle,
         value: argValue);
-
     //? --- Esse set serve para atualizar o estado do componente stateful que é o TransactionUser
     //? -- Logicamente será chamado depois de haver sido criado um objeto do tipo List<Transaction>
     setState(() {
@@ -95,7 +92,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   String value = ''; //?retirar pois acho que isso não está sendo usado
-
   _openTransactionFormModal(BuildContext context) {
     //Essa função vai simplesmente mostrar os textfilds para que o operador cadastre
     //uma nova transação
@@ -134,7 +130,6 @@ class _MyHomePageState extends State<MyHomePage> {
         appBarCriada.preferredSize.height -
         MediaQuery.of(context).padding.top;
     print('esse é o availableHeight DECALARACAO: $availableHeight');
-
     Container categoryDivider() {
       return Container(
         height: 1.0,
@@ -152,10 +147,8 @@ class _MyHomePageState extends State<MyHomePage> {
               'esse é o MediaQuery.of(context).size.height declaração: ${MediaQuery.of(context).size.height}');
           print(
               'esse é o MediaQuery.of(context).size.width PHONE: ${MediaQuery.of(context).size.width}}');
-
           print(
               'esse é o appBarCriada.preferredSize.height PHONE: ${appBarCriada.preferredSize.height}}');
-
           print(
               'esse é o MediaQuery.of(context).padding.top PHONE: ${MediaQuery.of(context).padding.top}}');
           print('esse é o availableHeight PHONE: $availableHeight');
@@ -169,7 +162,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: availableHeight * 0.2,
                 child: Chart(recentTransaction: _recentTransactions),
               ),
-
               categoryDivider(),
               //* =============== COLUNA DO LISTVIEW PHONE ============
               Container(
@@ -265,7 +257,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
 /*
 Column(
                 mainAxisSize: MainAxisSize.max,
@@ -282,7 +273,6 @@ Column(
                             _transactionListBancoDeDadosInicial,
                         functionRemove: _removeTransaction),
                   ),
-
                   // ElevatedButton(
                   //   child: Text('Nova data'),
                   //   onPressed: () {},
