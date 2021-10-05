@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop/models/product_list_observable.dart';
 import 'package:shop/pages/pages.dart';
-import 'package:shop/providers/counter.dart';
 import 'package:shop/utils/utils.dart';
 
 void main() {
@@ -11,12 +12,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return CounterProvider(
+    return ChangeNotifierProvider<ProductListObservable>(
+      create: (_) => ProductListObservable(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         home: ProductOverviewPage(),
-        routes: {AppRoutes.PRODUCT_DETAIL: (ctx) => CounterPage()},
+        routes: {AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage()},
 
         // ==== THEMAS
         theme: ThemeData(

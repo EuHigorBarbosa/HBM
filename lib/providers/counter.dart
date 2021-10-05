@@ -9,6 +9,10 @@ class CounterState {
   void inc() => _value++;
   void dec() => _value--;
   int get value => _value;
+
+  bool diff(CounterState old) {
+    return old._value != _value;
+  }
 }
 
 class CounterProvider extends InheritedWidget {
