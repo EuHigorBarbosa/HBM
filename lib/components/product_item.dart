@@ -12,6 +12,7 @@ class ProductItem extends StatelessWidget {
       // esse atributo diz que se houver uma modificação nos daddos então será ouvido pelos listeners
       //estando false não será ouvido e renderizado por se modificar, exceto nos consumers.
     );
+    final cart = Provider.of<Cart>(context, listen: false);
     //?Essa linha de codigo faz com que o dado productItem esteja disponível para toda a classe.
     //? Mas tem uma forma de fazer que é mais interessante pois ganha-se produtividade. É utilizando
     //? o CONSUMER
@@ -48,7 +49,10 @@ class ProductItem extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             trailing: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                cart.addItem(productItem);
+                print('adicionou ${cart.itemsCount}');
+              },
               icon: Icon(Icons.shopping_cart),
               color: Theme.of(context).secondaryHeaderColor,
             ),

@@ -29,7 +29,7 @@ class Cart with ChangeNotifier {
       _items.putIfAbsent(
         productAdded.id,
         () => CartItem(
-          id: Random().nextDouble(),
+          id: Random().nextDouble().toString(),
           producId: productAdded.id,
           name: productAdded.name,
           quantity: 1,
@@ -38,6 +38,14 @@ class Cart with ChangeNotifier {
       );
     }
     notifyListeners();
+  }
+
+  double get totalAmount {
+    double total = 0.0;
+    _items.forEach((key, cartItemOfTotalList) {
+      total += cartItemOfTotalList.price * cartItemOfTotalList.quantity;
+    });
+    return total;
   }
 
   void removeItem(String productId) {

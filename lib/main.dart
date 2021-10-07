@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/models/models.dart';
 import 'package:shop/models/product_list_observable.dart';
 import 'package:shop/pages/pages.dart';
 import 'package:shop/utils/utils.dart';
@@ -12,9 +13,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ProductListObservable>(
-      create: (_) => ProductListObservable(),
-      //Aqui o CNProvider está instanciando o CN. Então o uso do create ta correto.
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ProductListObservable(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Cart(),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
