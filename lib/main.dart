@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
         home: ProductOverviewPage(),
         routes: {
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage(),
+          AppRoutes.CART_PAGE: (ctx) => CartPage(),
         },
 
         // ==== THEMAS

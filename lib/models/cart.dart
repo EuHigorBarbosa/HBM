@@ -14,6 +14,14 @@ class Cart with ChangeNotifier {
     return _items.length;
   }
 
+  int get itemsNumber {
+    int total = 0;
+    _items.forEach((key, cartItemOfTotalList) {
+      total += cartItemOfTotalList.quantity;
+    });
+    return total;
+  }
+
   void addItem(Product productAdded) {
     if (_items.containsKey(productAdded.id)) {
       _items.update(

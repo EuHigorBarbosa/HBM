@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shop/components/components.dart';
+import 'package:shop/models/models.dart';
+import 'package:shop/utils/utils.dart';
 
 enum FilterOptions {
   Favorite,
@@ -26,7 +29,11 @@ class _ProductOverviewPageState extends State<ProductOverviewPage> {
     //os CONSUMERS
     return Scaffold(
       appBar: AppBar(
-        title: Text("Minha loja2"),
+        centerTitle: true,
+        title: Text(
+          "Minha loja2",
+          textAlign: TextAlign.center,
+        ),
         actions: [
           PopupMenuButton(
             icon: Icon(Icons.more_vert),
@@ -56,6 +63,20 @@ class _ProductOverviewPageState extends State<ProductOverviewPage> {
             },
             */
           ),
+          Consumer<Cart>(
+            child: IconButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(
+                  AppRoutes.CART_PAGE,
+                );
+              },
+              icon: Icon(Icons.shopping_cart),
+            ),
+            builder: (ctx, product, childOfConsumer) => Badge(
+              value: product.itemsNumber,
+              childOfBadge: childOfConsumer!,
+            ),
+          )
         ],
       ),
       body: ProductGrid(showFAvoriteOnly: _showFavoriteOnly),
