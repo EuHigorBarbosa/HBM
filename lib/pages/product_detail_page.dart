@@ -13,7 +13,7 @@ class ProductDetailPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(productReceived.title),
+        title: Text(productReceived.name),
       ),
       body: Image.network(productReceived.imageUrl),
     );
