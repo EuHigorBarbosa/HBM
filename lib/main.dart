@@ -14,11 +14,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ProductListObservable>(
       create: (_) => ProductListObservable(),
+      //Aqui o CNProvider está instanciando o CN. Então o uso do create ta correto.
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         home: ProductOverviewPage(),
-        routes: {AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage()},
+        routes: {
+          AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage(),
+        },
 
         // ==== THEMAS
         theme: ThemeData(

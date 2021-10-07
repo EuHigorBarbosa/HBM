@@ -1,10 +1,14 @@
-class Product {
+import 'package:flutter/foundation.dart';
+
+class Product with ChangeNotifier {
   final String id;
   final String title;
   final String description;
   final double price;
   final String imageUrl;
-  bool isFavorite;
+  bool isFavorite; //esse é o único atributo que vai ser modificado.
+  //Eu coloquei o mixin changeNotifier aqui para que eu consiga notificar
+  //os meus listeners quando ele for modificado.
 
   Product(
       {required this.id,
@@ -16,5 +20,6 @@ class Product {
 
   void toggleFavorite() {
     isFavorite = !isFavorite;
+    notifyListeners();
   }
 }

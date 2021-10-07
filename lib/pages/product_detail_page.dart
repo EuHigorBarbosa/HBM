@@ -15,10 +15,7 @@ class ProductDetailPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(productReceived.title),
       ),
-      body: Image.asset(
-        ggg.jpg,
-        fit: BoxFit.cover,
-      ),
+      body: Image.network(productReceived.imageUrl),
     );
   }
 }
