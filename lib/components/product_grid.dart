@@ -34,7 +34,7 @@ class ProductGrid extends StatelessWidget {
         //provido pelo CNProvider em qualquer de seus filhos e netos. E toda a árvore a partir dele será
         //renderizada quando o dado por ele observado se modificar nos pontos que há um notifyListen();
         //esse loadProducts[i]<Product> vai estar disponivel em qualquer elemento da arvore de componentes
-        child: ProductItem(),
+        child: ProductGridItem(),
         //la dentro do ProductItem(), no build, dado provido pelo CNProvider que é do tipo <Product> vai ser
         //acessado vai estar disponível. Quando os notifyListeners() forem acionados haverá uma modificação
         //em todos os dados providos pelo CNProvider. E o CNProvider vai renderizar todos os seus filhos e netos

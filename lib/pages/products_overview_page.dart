@@ -28,11 +28,13 @@ class _ProductOverviewPageState extends State<ProductOverviewPage> {
     //Para que eu não reconstrua toda a aplicação eu preciso utilizar
     //os CONSUMERS
     return Scaffold(
+      drawer: AppDrawer(),
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          "Minha loja2",
+          "Vintage by Ailene",
           textAlign: TextAlign.center,
+          style: (TextStyle(fontSize: 20)),
         ),
         actions: [
           PopupMenuButton(
@@ -50,6 +52,7 @@ class _ProductOverviewPageState extends State<ProductOverviewPage> {
             onSelected: (FilterOptions selectedValue) {
               setState(() {
                 (selectedValue == FilterOptions.Favorite)
+                    // ignore: unnecessary_statements
                     ? (_showFavoriteOnly = true)
                     : _showFavoriteOnly = false;
               });

@@ -13,6 +13,9 @@ class ProductListObservable with ChangeNotifier {
   List<Product> get itemsObservables => [..._itemsObservables];
   List<Product> get favoriteItems =>
       _itemsObservables.where((prod) => prod.isFavorite).toList();
+  int get itemsCount {
+    return _itemsObservables.length;
+  }
 
   void addProduct(Product product) {
     _itemsObservables.add(product);

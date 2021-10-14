@@ -45,6 +45,7 @@ class Cart with ChangeNotifier {
         ),
       );
     }
+    print('Produto ${productAdded.id} adicionado');
     notifyListeners();
   }
 
@@ -52,13 +53,36 @@ class Cart with ChangeNotifier {
     double total = 0.0;
     _items.forEach((key, cartItemOfTotalList) {
       total += cartItemOfTotalList.price * cartItemOfTotalList.quantity;
+      total = double.parse(total.toStringAsFixed(2));
     });
     return total;
   }
 
   void removeItem(String productId) {
     _items.remove(productId);
+    print('Remoção do $productId do carrinho');
     notifyListeners();
+  }
+
+//atualizar o produto diminuindo a quantidade
+  void undoAdd({required Product productJustAdded}) {
+    //o nome que o prof deu foi removeSingleItem
+
+    if (_items.containsKey(productJustAdded.id)) {
+      _items.update(
+        productJustAdded.id,
+        (preExistingItem) => CartItem(
+            id: preExistingItem.id,
+            producId: preExistingItem.producId,
+            name: preExistingItem.name,
+            quantity: preExistingItem.quantity - 1,
+            price: preExistingItem.price),
+      );
+      notifyListeners();
+    } else {
+      _items.remove(productJustAdded.id);
+    }
+    print('Produto ${productJustAdded.id} removido');
   }
 
   void clear() {

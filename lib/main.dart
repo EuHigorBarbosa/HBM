@@ -16,33 +16,42 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => ProductListObservable(),
+          create: (_) => new ProductListObservable(),
         ),
         ChangeNotifierProvider(
-          create: (_) => Cart(),
+          create: (_) => new Cart(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => new OrderList(),
         ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         home: ProductOverviewPage(),
+
         routes: {
+          AppRoutes.HOME: (ctx) => ProductOverviewPage(),
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage(),
           AppRoutes.CART_PAGE: (ctx) => CartPage(),
+          AppRoutes.ORDERS: (ctx) => OrdersPage(),
+          AppRoutes.PRODUCT_PAGE: (ctx) => ProductPage(),
+          AppRoutes.PRODUCT_FORM: (ctx) => ProductFormPage(),
+          //AppRoutes.CART
         },
 
         // ==== THEMAS
         theme: ThemeData(
           //* ================= appBarTheme ======================
-          appBarTheme: AppBarTheme(
-            textTheme: ThemeData.light().textTheme.copyWith(
-                  headline6: TextStyle(
-                    fontFamily: 'OpenSans',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-          ),
+          // appBarTheme: AppBarTheme(
+          //   textTheme: ThemeData.light().textTheme.copyWith(
+          //         headline6: TextStyle(
+          //           fontFamily: 'OpenSans',
+          //           fontSize: 20,
+          //           fontWeight: FontWeight.w700,
+          //         ),
+          //       ),
+          // ),
 
           //* ================= font Family ===================
           fontFamily: 'Lato',
