@@ -25,7 +25,7 @@ class ProductListObservable with ChangeNotifier {
     return _itemsObservables.length;
   }
 
-  void saveProductFromDataForm(Map<String, Object> dataFromForm) {
+  Future<void> saveProductFromDataForm(Map<String, Object> dataFromForm) {
     print('\n Metodo SAveProductDataForm foi acionado');
 
     bool hasId = dataFromForm['id'] != null;
@@ -57,14 +57,14 @@ class ProductListObservable with ChangeNotifier {
 
     if (hasId) {
       //chama metodo que faz o update do id
-      updateIdOnProduct(newProduct);
+      return updateIdOnProduct(newProduct);
     } else {
       //chama metodo que add o produto já com o id
-      addProduct(newProduct);
+      return addProduct(newProduct);
     }
   }
 
-  void updateIdOnProduct(Product productToUpdateOrAdd) {
+  Future<void> updateIdOnProduct(Product productToUpdateOrAdd) {
     int indexToKnowWherePutTheNew = _itemsObservables
         .indexWhere((item) => item.id == productToUpdateOrAdd.id);
     //Se o indexTo... for -1 então o id é novo e o produto deve ser add
@@ -74,10 +74,12 @@ class ProductListObservable with ChangeNotifier {
       _itemsObservables[indexToKnowWherePutTheNew] = productToUpdateOrAdd;
       //Se o indexTo...for 2 então o _itemObservables[2] deve ser sobrescrito pelo productToUpdate
       notifyListeners();
+      return Future.value();
     } else if (indexToKnowWherePutTheNew == -1) {
       //se
-      addProduct(productToUpdateOrAdd);
+      return addProduct(productToUpdateOrAdd);
     }
+    return Future.value();
   }
 
   void removeProductFromId(Product productToRemove) {
@@ -96,7 +98,10 @@ class ProductListObservable with ChangeNotifier {
     }
   }
 
-  void addProduct(Product product) {
+  //Essa função é do tipo Future e o que ela retorna é um then do future que
+  //será respondido. Isso pode ser feito pois o then retorna um future e eu coloquei
+  //o generics para ser <void>
+  Future<void> addProduct(Product product) {
     var urlMinha = Uri.parse('$_baseUrl/products.json');
 
     final postProduct = http.post(
@@ -112,7 +117,7 @@ class ProductListObservable with ChangeNotifier {
         //o id não envia pois estou aqui adicionando um novo produto
       ), //converte para json
     );
-    postProduct.then((response) {
+    return postProduct.then<void>((response) {
       print('Printado depois que a resposta voltar do FireBase');
       print(jsonDecode(response.body));
       //Quando recebemos a resposta nós recebemos um json com string inicial 'name'
