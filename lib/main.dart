@@ -5,7 +5,7 @@ import 'package:shop/models/product_list_observable.dart';
 import 'package:shop/pages/pages.dart';
 import 'package:shop/utils/utils.dart';
 
-void main() {
+main() {
   runApp(MyApp());
 }
 

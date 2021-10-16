@@ -1,6 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shop/models/models.dart';
 
 class ProductFormPage extends StatefulWidget {
@@ -25,7 +24,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
   //.currentState.save()
   //.currentWidget
   //.currentContext
-  final _formData = Map<String, Object>();
+
+  var _formData = Map<String, Object>();
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +35,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
     _descriptionFocus = FocusNode();
     _urlFocus = FocusNode();
     _urlFocus.addListener(updateImage);
+    print('INIT STATE INICIADO');
     //adicionei ouvinte para poder carregar a imagem apos o setfocus sair da caixa
     //de texto da url.
   }
@@ -70,32 +72,39 @@ class _ProductFormPageState extends State<ProductFormPage> {
   }
 
   void _submitForm() {
-    print(
-        'O tipo do _formKey.currentState é ${_formKey.currentState.runtimeType}');
-    print(_formKey.currentState.toString());
+    print('O método on Submit foi acionado\n');
 
     final isValid = _formKey.currentState?.validate() ?? true;
-
-    print(
-        'A validação foi do tipo boo valendo ${_formKey.currentState?.validate()}');
-    print('O valor de isValid é? $isValid');
+    print('CONSIDERADO DADO VALIDO = isValid = $isValid');
 
     if (isValid) {
       _formKey.currentState?.save();
-      print('CONSIDERADO DADO VALIDO = isValid = $isValid');
       //o currentState pode não estar disponível, por isso devo utilizar essa ?
       //Quando dou um save nessa globalKey eu estou dando um save no meu Form - mais
       //precisamente na parte do FormState.
       //Quando uso o metodo .save eu estou dizendo:  Saves every [FormField] that is a descendant of this [Form].
 
-      final newProduct = Product(
-        id: Random().nextDouble().toString(),
-        name: _formData['name'] as String,
-        description: _formData['descritption'] as String,
-        price: double.parse(_formData['price'] as String),
-        imageUrl: _formData['imageUrl'] as String,
-      );
+      //========Variaveis que foram salvas:
+      print('o valor das variáveis a serem salvas são:');
+      print('name: ${_formData['name']}');
+      print('price: ${_formData['price']}');
+
+      print('description: ${_formData['description']}');
+
+      print('imageUrl: ${_formData['imageUrl']}');
+      //=============================================
+
       //print(newProduct.id);
+      Provider.of<ProductListObservable>(
+        context,
+        listen: false,
+      ).saveProductFromDataForm(_formData);
+
+      ///Quando chamamos o provider fora do metodo build (por meio de uma função de onPreessed
+      ///por exemplo) o sistema do provider não vai ser notificado a cada
+      ///modificação. Ele será notificado somente no evento associado(como o pressionar
+      ///do botão). Por isso o listen deve obrigatoriamente ser false.
+      Navigator.of(context).pop();
     }
   }
 
@@ -112,11 +121,92 @@ class _ProductFormPageState extends State<ProductFormPage> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print('DID CHANGE DEPENDENCIES INICIADO');
+    print('O valor de _formData.isEmpty é ${_formData.isEmpty}');
+
+    if (_formData.isEmpty) {
+      final productReceived = ModalRoute.of(context)?.settings.arguments;
+
+      print(
+          'O valor de productReceived  é null? =>: ${productReceived == null}');
+
+      if (productReceived != null) {
+        final product = productReceived as Product;
+        _formData['id'] = product.id;
+        _formData['name'] = product.name;
+        _formData['description'] = product.description;
+        _formData['price'] = product.price;
+        _formData['imageUrl'] = product.imageUrl;
+
+        _imageUrlController.text = product.imageUrl;
+      }
+      (_formData['name'] == null)
+          ? print('null para nome')
+          : print('${_formData['name'].toString()}');
+      (_formData['price'] == null)
+          ? print('null para price')
+          : print('${_formData['price'].toString()}');
+      (_formData['description'] == null)
+          ? print('null para description')
+          : print('${_formData['description'].toString()}');
+      (_formData['imageUrl'] == null)
+          ? print('null para imageUrl')
+          : print('${_formData['imageUrl'].toString()}');
+      (_formData['id'] == null)
+          ? print('null para id')
+          : print('${_formData['id'].toString()}');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print('Construindo widget inicial build');
+    print('O Form chegou a ser buildado');
+    print('O produto clicado tem o nome de : ${_formData['name'].toString()}');
+    print(
+        'O produto clicado tem o price de : ${_formData['price'].toString()}');
+    print(
+        'O produto clicado tem o description de : ${_formData['description'].toString()}');
+    print(
+        'O produto clicado tem o imageUrl de : ${_formData['imageUrl'].toString()}');
+    print('O produto clicado tem o id de : ${_formData['id'].toString()}');
+
+    // print('O produto clicado tem o price de : ${productReceived.price}');
+
+    // print(
+    //     'O produto clicado tem o description de : ${productReceived.description}');
+
+    // print('O produto clicado tem o imageUrl de : ${productReceived.imageUrl}');
+
+    // print('Teste de casting para string');
+
+    //Inicializando os campos do formulario quando o usuario aperta edit
+    // *** Campos Name, price e description
+
+    // *** Campo imageUrl */
+
+    //é necessário salvar no _formData o id recebido pelo botão edit
+    //pois quando o usuario for salvar um product vindo do edit, o sistema vai
+    //precisar do id para não duplicar o produto na lista mas sim editá-lo
+
+    // print('Construindo widget inicial build');
+    // print(
+    //     'tipo: ${_formDataInicial['name'].toString()} e valor: ${_formDataInicial['name']}\n');
+    // print(
+    //     'tipo: ${_formDataInicial['price'].toString()} e valor: ${_formDataInicial['price']}\n');
+    // print(
+    //     'tipo: ${_formDataInicial['description'].toString()} e valor: ${_formDataInicial['description']}\n');
+    // print(
+    //     'tipo: ${_formDataInicial['imageUrl'].toString()} e valor: ${_formDataInicial['imageUrl']}\n');
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Formulário de Produto'),
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(Icons.arrow_left),
+        ),
         actions: [
           IconButton(
             onPressed: _submitForm,
@@ -132,7 +222,11 @@ class _ProductFormPageState extends State<ProductFormPage> {
             //Text('https://picsum.photos/250?image=9'),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              //!===============================================
               child: TextFormField(
+                initialValue: (_formData['name'] == null)
+                    ? ''
+                    : _formData['name'].toString(),
                 focusNode: _nameFocus,
                 decoration: InputDecoration(
                   labelText: 'Nome',
@@ -149,6 +243,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                   FocusScope.of(context).requestFocus(_priceFocus);
                 },
                 onSaved: (name) {
+                  print('O name do formulário para ser salvo é: $name');
                   if (name != null) {
                     _formData['name'] = name;
                   } else {
@@ -166,7 +261,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                   if (name.trim().length < 3) {
                     return 'Nome é obrigatório';
                   }
-                  print('Está retornando null no NAME');
+                  print('Name passou no teste de validação');
                   return null;
                 },
               ),
@@ -174,6 +269,10 @@ class _ProductFormPageState extends State<ProductFormPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: TextFormField(
+                //!===============================================
+                initialValue: (_formData['price'] == null)
+                    ? ''
+                    : _formData['price'].toString(),
                 focusNode: _priceFocus,
                 decoration: InputDecoration(labelText: 'Preço'),
                 textInputAction: TextInputAction.next,
@@ -182,6 +281,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
                   FocusScope.of(context).requestFocus(_descriptionFocus);
                 },
                 onSaved: (price) {
+                  print('O price do formulário para ser salvo é: $price');
+
                   if (price != null) {
                     _formData['price'] = price;
                   } else {
@@ -206,7 +307,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                     return 'Digite um número MAIOR que zero';
                   }
                   //falta validação de não colocar letras
-                  print('Está retornando null no PRICE');
+                  print('price passou no teste de validação');
                   return null;
                 },
               ),
@@ -214,6 +315,11 @@ class _ProductFormPageState extends State<ProductFormPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: TextFormField(
+                //!===============================================
+                initialValue: (_formData['description'] == null)
+                    ? ''
+                    : _formData['description'].toString(),
+
                 focusNode: _descriptionFocus,
                 decoration: InputDecoration(labelText: 'Descrição'),
                 textInputAction: TextInputAction.next,
@@ -222,10 +328,12 @@ class _ProductFormPageState extends State<ProductFormPage> {
                   FocusScope.of(context).requestFocus(_urlFocus);
                 },
                 onSaved: (description) {
+                  print(
+                      'O description do formulário para ser salvo é: $description');
                   if (description != null) {
-                    _formData['descritption'] = description;
+                    _formData['description'] = description;
                   } else {
-                    _formData['descritption'] = '';
+                    _formData['description'] = '';
                   }
                 },
                 validator: (_description) {
@@ -240,7 +348,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                   if (description.trim().length < 3) {
                     return 'Descrição é obrigatório';
                   }
-                  print('Está retornando null no DESCRIPTION');
+                  print('description passou no teste de validação');
 
                   return null;
                 },
@@ -263,6 +371,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextFormField(
+                          //!===============================================
+                          //initialValue: _imageUrlController.text,
                           focusNode: _urlFocus,
                           decoration: InputDecoration(
                             labelText: 'URL da imagem',
@@ -286,6 +396,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                           //um nome de argumento como foo mas eu poderia, ao ler, não pegar a ideia
                           //especifica desse uso nessa ocasião especifica
                           onSaved: (url) {
+                            print('O url do formulário para ser salvo é: $url');
                             if (url != null) {
                               _formData['imageUrl'] = url;
                             } else {
@@ -299,7 +410,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                             if (!isValidImageUrl(imageUrl)) {
                               return 'Informe url válida';
                             }
-                            print('Está retornando null no URL');
+                            print('url passou no teste de validação');
                             return null;
                           }),
                     ),
@@ -315,7 +426,12 @@ class _ProductFormPageState extends State<ProductFormPage> {
                         //alignment: Alignment.center,
                         child: SizedBox.expand(
                           child: FittedBox(
-                            fit: BoxFit.fitWidth,
+                            fit: ((_imageUrlController.text.isEmpty) ||
+                                    (!_imageUrlController.text.isEmpty &&
+                                        !isValidImageUrl(
+                                            _imageUrlController.text)))
+                                ? BoxFit.contain
+                                : BoxFit.fill,
                             child: ((_imageUrlController.text.isEmpty) ||
                                     (!_imageUrlController.text.isEmpty &&
                                         !isValidImageUrl(
@@ -324,7 +440,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                                     'Informe a Url\n\nToque para carregar\na imagem')
                                 : Image.network(
                                     _imageUrlController.text,
-                                    fit: BoxFit.cover,
+                                    //fit: BoxFit.cover,
                                   ),
                           ),
                         ),
