@@ -11,7 +11,10 @@ class ProductGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ponteDeDados = Provider.of<ProductListObservable>(context);
-    List<Product> loadedProducts = [];
+    //Esse ponte de Dados aí é a representação de uma instancia do tipo ProductListObservables
+    //por ser uma instancia, tem acesso ao get daquela instancia que diz quem são os itensObservables
+    List<Product> loadedProducts = []; //Receberá os dados logo abaixo
+
     if (showFAvoriteOnly == false) {
       loadedProducts = ponteDeDados.itemsObservables;
     } else {

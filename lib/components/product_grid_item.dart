@@ -35,8 +35,16 @@ class ProductGridItem extends StatelessWidget {
             backgroundColor: Colors.black54,
             leading: Consumer<Product>(
               builder: (ctx, product, _) => IconButton(
-                onPressed: () {
-                  productItem.toggleFavorite();
+                onPressed: () async {
+                  try {
+                    await productItem.toggleFavorite(productItem.id);
+                  } catch (errorOrException) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(errorOrException.toString()),
+                      ),
+                    );
+                  }
                 },
                 icon: Icon(productItem.isFavorite
                     ? Icons.favorite

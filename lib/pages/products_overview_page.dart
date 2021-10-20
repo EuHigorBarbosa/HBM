@@ -19,14 +19,37 @@ class ProductOverviewPage extends StatefulWidget {
 
 class _ProductOverviewPageState extends State<ProductOverviewPage> {
   bool _showFavoriteOnly = false;
+  bool _isLoading =
+      true; //para indicar o estado de carregamento para o usuario.
+  //Começa true pois o carregamento se inicia no initState do pageOverview
+
+  @override
+  void initState() {
+    // print(
+    //     'Este é o valor do _isLoading no inicio do processamento: $_isLoading em ${DateTime.now()}');
+    super.initState();
+
+    Provider.of<ProductListObservable>(context, listen: false)
+        .loadProductsFromFirebase();
+    setState(() {
+      _isLoading = false;
+      // print(
+      //     'Acabou de iniciar _isLoading: $_isLoading como false em ${DateTime.now()}');
+    }); //ao terminar de carregar os dados ele informa ao usuario
+  }
+
   @override
   Widget build(BuildContext context) {
+    print('O build do OverviewPage está iniciando');
+    print(Provider.of<ProductListObservable>(context, listen: false)
+        .itemsObservables);
     //!final ponteDeDados = Provider.of<ProductListObservable>(context);
     //Eu não estou mais coletando os dados do dammy_data e sim dos
     //itemsObservables que são a lista manipulada pelo subject da
     //classe ProductListObservable. Ele é quem notifica os listeners.
     //Para que eu não reconstrua toda a aplicação eu preciso utilizar
     //os CONSUMERS
+
     return Scaffold(
       drawer: AppDrawer(),
       appBar: AppBar(
@@ -82,7 +105,11 @@ class _ProductOverviewPageState extends State<ProductOverviewPage> {
           )
         ],
       ),
-      body: ProductGrid(showFAvoriteOnly: _showFavoriteOnly),
+      // ================= Esse é o body da minha primeira tela - só isso
+      // Se estiver carregando mostra o CircularProgressIndicator, se terminou mostra o grid
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ProductGrid(showFAvoriteOnly: _showFavoriteOnly),
     );
   }
 }

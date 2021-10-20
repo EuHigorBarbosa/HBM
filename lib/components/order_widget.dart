@@ -16,7 +16,8 @@ class _OrderWidgetState extends State<OrderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    //print('O order tem ${widget.order.products.length}');
+    print('O order tem ${widget.order.products.length} produtos cadastrados');
+    print('O order tem ${widget.order.total} em valores Reais');
     return Card(
       child: Column(
         children: [

@@ -4,13 +4,18 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
-import 'package:shop/data/dammy_data.dart';
+import 'package:shop/exceptions/http_exceptions.dart';
 import 'package:shop/models/models.dart';
+import 'package:shop/utils/utils.dart';
 
+///?Essa classe foi criada para ser uma Provider(provedora de informações)
+///?As outras classes são notificadas com os daddos dessa classe(por meio dos NotifyListeners)
+///?
 class ProductListObservable with ChangeNotifier {
-  final _baseUrl = 'https://shop-higor-default-rtdb.firebaseio.com/';
+  List<Product> _itemsObservables = []; //dummyProducts;
 
-  List<Product> _itemsObservables = dummyProducts;
+  //antes esses _itemsObservables eram carregados pelo dammyProducts.
+  //Agora eles são carregados pelo initState() do overviewPage
 
   //como é privada list temos que ter um get
   //esses ... é pra fazer uma copia dos dados originais.
@@ -20,11 +25,55 @@ class ProductListObservable with ChangeNotifier {
 
   List<Product> get favoriteItems =>
       _itemsObservables.where((prod) => prod.isFavorite).toList();
-
+//?=========================================================================
   int get itemsCount {
     return _itemsObservables.length;
   }
 
+//?=========================================================================
+
+//?=========================================================================
+  Future<void> loadProductsFromFirebase() async {
+    print('O LoadProductsFromFireBase chegou a ser iniciado');
+
+    print(
+        'A lista _itemsObservables ANTES do clear vale: ${_itemsObservables.length}');
+    _itemsObservables.clear();
+    print(
+        'A lista _itemsObservables depois do clear vale: ${_itemsObservables.length}');
+
+    //O loadProductFrom... será chamado a cada initState da OverviewPage e isso gera
+    //imagens repetidas, por isso tem que limpar.
+
+    final response =
+        await http.get(Uri.parse('${Constants.PRODUCT_BASE_URL}.json'));
+    //vamos carregar os dados(advindos do FireBase)  por meio dessa função e substituir os
+    //dammyProducts acima. Vamos carregar e substituir no initState do overviewPage.
+    if (response.body == 'null') //!Se eu colocar null sem as aspas da erro
+      return; //Se não tem nada no banco de dados, então retorna sem carregar nada. Aí fica valendo o [] lá na delacração de _itemsObservables
+    Map<String, dynamic> data = jsonDecode(response.body);
+    print('Esse é o conteúdo do response.body: ${response.body}');
+    // print(
+    //     'Qual o type do price do lugar zero? ${data[0]['price'].runtimeType}');
+    data.forEach((productId, productData) {
+      print(
+          'Qual o type do price do produtoId $productId é: ${productData['price'].runtimeType}');
+      _itemsObservables.add(
+        //cria o _itemsObservables que será usado lá no body do productOverviewPage quando ele chamar o ProductGrid
+        Product(
+          id: productId,
+          name: productData['name'],
+          description: productData['description'],
+          price: double.parse('${productData['price']}'),
+          imageUrl: productData['imageUrl'],
+          isFavorite: productData['isFavorite'],
+        ),
+      );
+    });
+    notifyListeners(); //Sem esse notifyListeners o _itemObservables é iniciado normalmente como []
+  }
+
+//?=========================================================================
   Future<void> saveProductFromDataForm(Map<String, Object> dataFromForm) {
     print('\n Metodo SAveProductDataForm foi acionado');
 
@@ -64,13 +113,29 @@ class ProductListObservable with ChangeNotifier {
     }
   }
 
-  Future<void> updateIdOnProduct(Product productToUpdateOrAdd) {
+//?=========================================================================
+  Future<void> updateIdOnProduct(Product productToUpdateOrAdd) async {
     int indexToKnowWherePutTheNew = _itemsObservables
         .indexWhere((item) => item.id == productToUpdateOrAdd.id);
     //Se o indexTo... for -1 então o id é novo e o produto deve ser add
     //Se o indexTo.... for >=0 então é o caso de se fazer o update
     //mas com certeza será >= pois se
     if (indexToKnowWherePutTheNew >= 0) {
+      await http.patch(
+        Uri.parse(
+            '${Constants.PRODUCT_BASE_URL}/${productToUpdateOrAdd.id}.json'),
+        body: jsonEncode(
+          {
+            "name": productToUpdateOrAdd.name,
+            "description": productToUpdateOrAdd.description,
+            "price": productToUpdateOrAdd.price,
+            "imageUrl": productToUpdateOrAdd.imageUrl,
+            //a parte de isFavorite não é usada no gerenciamento de produtos
+          },
+          //o id não envia pois estou aqui adicionando um novo produto
+        ), //converte para json
+      );
+
       _itemsObservables[indexToKnowWherePutTheNew] = productToUpdateOrAdd;
       //Se o indexTo...for 2 então o _itemObservables[2] deve ser sobrescrito pelo productToUpdate
       notifyListeners();
@@ -82,30 +147,52 @@ class ProductListObservable with ChangeNotifier {
     return Future.value();
   }
 
-  void removeProductFromId(Product productToRemove) {
+//?=========================================================================
+  Future<void> removeProductFromId(Product productToRemove) async {
     int indexToKnowWherePutTheNew =
         _itemsObservables.indexWhere((item) => item.id == productToRemove.id);
     //Se o indexTo... for -1 então o id é novo e o produto deve ser add
     //Se o indexTo.... for >=0 então é o caso de se fazer o update
     //mas com certeza será >= pois se
-    if (indexToKnowWherePutTheNew >= 0) {
-      _itemsObservables.removeAt(indexToKnowWherePutTheNew);
-      //Se o indexTo...for 2 então o _itemObservables[2] deve ser sobrescrito pelo productToUpdate
-      notifyListeners();
-    } else if (indexToKnowWherePutTheNew == -1) {
-      //ainda não programado
+    final productRemovedWithoutServerConfirmation =
+        _itemsObservables[indexToKnowWherePutTheNew];
+    _itemsObservables.remove(productRemovedWithoutServerConfirmation);
+    //Se o indexTo...for 2 então o _itemObservables[2] deve ser sobrescrito pelo productToUpdate
+    notifyListeners();
 
+    if (indexToKnowWherePutTheNew >= 0) {
+      //Aqui eu tive que guardar a respose numa var pois vou utilizá-la
+      //para verificar se houve algum problema já que a remoção é otimista: primeiro eu
+      //removo da vista do usuário e depois eu removo do banco de dados
+      final response = await http.delete(
+        Uri.parse('${Constants.PRODUCT_BASE_URL}/${productToRemove.id}.json'),
+      );
+
+      if (response.statusCode >= 400) {
+        //o erro da familia dos 400 é um erro do cliente
+        _itemsObservables.insert(
+            indexToKnowWherePutTheNew, productRemovedWithoutServerConfirmation);
+        notifyListeners();
+        throw new HttpException(
+          msg: 'Não foi possível excluir o produto.',
+          statusCode: response.statusCode,
+        ); //Essa exceção foi lançada mas não foi tratada aqui. Ela será tratada lá
+        //no componente icons.delete - onPressed do productItem
+      }
     }
   }
 
+  //?=========================================================================
   //Essa função é do tipo Future e o que ela retorna é um then do future que
   //será respondido. Isso pode ser feito pois o then retorna um future e eu coloquei
   //o generics para ser <void>
+
   Future<void> addProduct(Product product) {
-    var urlMinha = Uri.parse('$_baseUrl/products.json');
+    //! Não há tratamento de erro
+    var urlForAddNewPost = Uri.parse('${Constants.PRODUCT_BASE_URL}.json');
 
     final postProduct = http.post(
-      urlMinha,
+      urlForAddNewPost,
       body: jsonEncode(
         {
           "name": product.name,
@@ -117,25 +204,27 @@ class ProductListObservable with ChangeNotifier {
         //o id não envia pois estou aqui adicionando um novo produto
       ), //converte para json
     );
-    return postProduct.then<void>((response) {
-      print('Printado depois que a resposta voltar do FireBase');
-      print(jsonDecode(response.body));
-      //Quando recebemos a resposta nós recebemos um json com string inicial 'name'
+    return postProduct.then<void>(
+      (response) {
+        print('Printado depois que a resposta voltar do FireBase');
+        print(jsonDecode(response.body));
+        //Quando recebemos a resposta nós recebemos um json com string inicial 'name'
 
-      final idReceivedFromFirebase = jsonDecode(response.body)['name'];
-      _itemsObservables.add(
-        Product(
-          name: product.name,
-          id: idReceivedFromFirebase,
-          price: product.price,
-          description: product.description,
-          imageUrl: product.imageUrl,
-          isFavorite: product.isFavorite,
-        ),
-      ); //aqui há o salvamento dos dados em memoria
-      notifyListeners();
-    });
-    print('Print depois do post sem esperar a resposta');
+        final idReceivedFromFirebase = jsonDecode(response.body)['name'];
+        _itemsObservables.add(
+          Product(
+            name: product.name,
+            id: idReceivedFromFirebase,
+            price: product.price,
+            description: product.description,
+            imageUrl: product.imageUrl,
+            isFavorite: product.isFavorite,
+          ),
+        ); //aqui há o salvamento dos dados em memoria
+        notifyListeners();
+        //print('Print depois do post sem esperar a resposta');
+      },
+    );
   }
 }
 

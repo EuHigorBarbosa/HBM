@@ -66,10 +66,11 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
   bool isValidImageUrl(String url) {
     bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
-    bool endsWithFile = url.toLowerCase().endsWith('.png') ||
+    bool endsWithFile =
+        true; /*url.toLowerCase().endsWith('.png') ||
         url.toLowerCase().endsWith('.jpg') ||
         url.toLowerCase().endsWith('.jpeg') ||
-        url.toLowerCase().endsWith('image=9');
+        url.toLowerCase().endsWith('image=9');*/
     print('Retorno da validação do url = ${isValidUrl && endsWithFile}');
     return isValidUrl && endsWithFile;
   }
@@ -131,7 +132,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
         setState(() => (_isLoadingResponseFromNet = false));
         print('Antes de carregar a tela');
       }
-      ; //só vai sair do form quando o then do future save for respondido.
+      //só vai sair do form quando o then do future save for respondido.
 
       ///Quando chamamos o provider fora do metodo build (por meio de uma função de onPreessed
       ///por exemplo) o sistema do provider não vai ser notificado a cada
@@ -175,21 +176,21 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
         _imageUrlController.text = product.imageUrl;
       }
-      (_formData['name'] == null)
-          ? print('null para nome')
-          : print('${_formData['name'].toString()}');
-      (_formData['price'] == null)
-          ? print('null para price')
-          : print('${_formData['price'].toString()}');
-      (_formData['description'] == null)
-          ? print('null para description')
-          : print('${_formData['description'].toString()}');
-      (_formData['imageUrl'] == null)
-          ? print('null para imageUrl')
-          : print('${_formData['imageUrl'].toString()}');
-      (_formData['id'] == null)
-          ? print('null para id')
-          : print('${_formData['id'].toString()}');
+      // (_formData['name'] == null)
+      //     ? print('null para nome')
+      //     : print('${_formData['name'].toString()}');
+      // (_formData['price'] == null)
+      //     ? print('null para price')
+      //     : print('${_formData['price'].toString()}');
+      // (_formData['description'] == null)
+      //     ? print('null para description')
+      //     : print('${_formData['description'].toString()}');
+      // (_formData['imageUrl'] == null)
+      //     ? print('null para imageUrl')
+      //     : print('${_formData['imageUrl'].toString()}');
+      // (_formData['id'] == null)
+      //     ? print('null para id')
+      //     : print('${_formData['id'].toString()}');
     }
   }
 

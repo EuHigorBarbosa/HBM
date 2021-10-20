@@ -1,3 +1,11 @@
 {
-    "eslint.debug": true
+    "eslint.debug": true,
+    "workbench.colorCustomizations": {
+        "tab.activeBackground": "#703f1e",
+
+        
+    },
+
 }
+
+

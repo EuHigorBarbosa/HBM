@@ -9,11 +9,12 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final msgErrorOrExcpetionAlert = ScaffoldMessenger.of(context);
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(productItem.imageUrl),
       ),
-      title: Text('Produto'),
+      title: Text(productItem.name),
       trailing: Container(
         width: 100,
         child: Row(
@@ -30,6 +31,7 @@ class ProductItem extends StatelessWidget {
               icon: Icon(Icons.delete),
               color: Theme.of(context).errorColor,
               onPressed: () {
+                //showDialog é uma Future
                 showDialog<bool>(
                   context: context,
                   builder: (context) {
@@ -54,10 +56,23 @@ class ProductItem extends StatelessWidget {
                       ],
                     );
                   },
-                ).then((value) {
+                  //Transformei o then para async, coloquei um await para esperar a
+                  //response do http.patch que ta dentro do removeProductFromId e
+                  //se der algum erro ele será lançado lá e tratado aqui por meio
+                  //de uma mensagem de snackbar
+                ).then((value) async {
                   if (value ?? false) {
-                    Provider.of<ProductListObservable>(context, listen: false)
-                        .removeProductFromId(productItem);
+                    try {
+                      await Provider.of<ProductListObservable>(context,
+                              listen: false)
+                          .removeProductFromId(productItem);
+                    } catch (errorOrException) {
+                      msgErrorOrExcpetionAlert.showSnackBar(
+                        SnackBar(
+                          content: Text(errorOrException.toString()),
+                        ),
+                      );
+                    }
                   }
                 });
               }, //onPreessed
