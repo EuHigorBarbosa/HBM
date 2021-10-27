@@ -4,3 +4,4 @@ export 'cart.dart';
 export 'cart_items.dart';
 export 'order.dart';
 export 'order_list.dart';
+export 'auth.dart';

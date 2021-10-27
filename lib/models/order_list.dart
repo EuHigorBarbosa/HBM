@@ -7,8 +7,14 @@ import 'package:shop/models/models.dart';
 import 'package:shop/utils/utils.dart';
 
 class OrderList with ChangeNotifier {
-  //Essa classe que vai gerenciar tudo
+  final String _token;
   List<Order> _itemsOnListOrders = [];
+  String _idUserOrder;
+
+  OrderList(
+      [this._token = '',
+      this._itemsOnListOrders = const [],
+      this._idUserOrder = '']);
 
   List<Order> get items {
     return [..._itemsOnListOrders];
@@ -18,14 +24,15 @@ class OrderList with ChangeNotifier {
     return _itemsOnListOrders.length;
   }
 
-  //?=============================================================
+  //?============================   ADD ORDER    =================================
 
   Future<void> addOrder(Cart cart) async {
     var _timeOfOrder = DateTime.now();
     //insere-se otimisticamente
 
     //insere-se no banco de dados criando uma nova arvore
-    final urlForAddNewPost = Uri.parse('${Constants.ORDER_BASE_URL}.json');
+    final urlForAddNewPost = Uri.parse(
+        '${Constants.ORDER_BASE_URL}/$_idUserOrder.json?auth=$_token');
 
     final responsePostOrder = await http.post(
       urlForAddNewPost,
@@ -63,6 +70,7 @@ class OrderList with ChangeNotifier {
       ),
       //converte para json
     );
+
     final idFromFireBase = jsonDecode(responsePostOrder.body)['name'];
     _itemsOnListOrders.insert(
       0,
@@ -95,21 +103,18 @@ class OrderList with ChangeNotifier {
     }
   }
 
-  //?=============================================================
+  //?==================   LOAD ORDER  ===========================================
   Future<void> loadOrdersFromFirebase() async {
     print('O LoadProductsFromFireBase chegou a ser iniciado');
 
-    print(
-        'A lista _itemsObservables ANTES do clear vale: ${_itemsOnListOrders.length}');
-    _itemsOnListOrders.clear();
-    print(
-        'A lista _itemsObservables depois do clear vale: ${_itemsOnListOrders.length}');
+    List<Order> itemsOnListOrders =
+        []; //Antes esse comando era: _itemsOnListOrders.clear();
 
     //O loadProductFrom... será chamado a cada initState da OverviewPage e isso gera
     //imagens repetidas, por isso tem que limpar.
 
-    final response =
-        await http.get(Uri.parse('${Constants.ORDER_BASE_URL}.json'));
+    final response = await http.get(Uri.parse(
+        '${Constants.ORDER_BASE_URL}/$_idUserOrder.json?auth=$_token'));
     //vamos carregar os dados(advindos do FireBase)  por meio dessa função e substituir os
     //dammyProducts acima. Vamos carregar e substituir no initState do overviewPage.
     if (response.body == 'null') //!Se eu colocar null sem as aspas da erro
@@ -119,7 +124,7 @@ class OrderList with ChangeNotifier {
     // print(
     //     'Qual o type do price do lugar zero? ${data[0]['price'].runtimeType}');
     data.forEach((orderId, orderData) {
-      _itemsOnListOrders.add(
+      itemsOnListOrders.add(
         //cria o _itemsObservables que será usado lá no body do productOverviewPage quando ele chamar o ProductGrid
         Order(
           id: orderId,
@@ -135,7 +140,8 @@ class OrderList with ChangeNotifier {
           }).toList(),
         ),
       );
-
+      _itemsOnListOrders = itemsOnListOrders.reversed
+          .toList(); //fiz isso para os pedidos mais novos ficarem por cima
       notifyListeners(); //Sem esse notifyListeners o _itemObservables é iniciado normalmente como []
     });
   }

@@ -6,16 +6,15 @@ import 'package:shop/utils/utils.dart';
 class ProductGridItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final productItem = Provider.of<Product>(
-      context,
-      listen: false,
-      // esse atributo diz que se houver uma modificação nos daddos então será ouvido pelos listeners
-      //estando false não será ouvido e renderizado por se modificar, exceto nos consumers.
-    );
+    final productItem = Provider.of<Product>(context, listen: false);
+    // esse atributo diz que se houver uma modificação nos daddos então será ouvido pelos listeners
+    //estando false não será ouvido e renderizado por se modificar, exceto nos consumers.
+
     final cart = Provider.of<Cart>(context, listen: false);
     //?Essa linha de codigo faz com que o dado productItem esteja disponível para toda a classe.
-    //? Mas tem uma forma de fazer que é mais interessante pois ganha-se produtividade. É utilizando
+    //? Mas tem uma forma de fazer que é mais interessante pois ganha-se performace. É utilizando
     //? o CONSUMER
+    final auth = Provider.of<Auth>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -37,7 +36,8 @@ class ProductGridItem extends StatelessWidget {
               builder: (ctx, product, _) => IconButton(
                 onPressed: () async {
                   try {
-                    await productItem.toggleFavorite(productItem.id);
+                    await productItem.toggleFavorite(productItem.id,
+                        auth.getToken ?? '', auth.getUserId ?? '');
                   } catch (errorOrException) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

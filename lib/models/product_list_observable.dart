@@ -10,10 +10,26 @@ import 'package:shop/utils/utils.dart';
 
 ///?Essa classe foi criada para ser uma Provider(provedora de informações)
 ///?As outras classes são notificadas com os daddos dessa classe(por meio dos NotifyListeners)
-///?
+
 class ProductListObservable with ChangeNotifier {
   List<Product> _itemsObservables = []; //dummyProducts;
+  final String _token;
+  final String
+      _userIdFromFireBase; //colocado aqui especificamente para ser possível fazer o get da coleção do isFavorite que depende do userId
 
+  ProductListObservable(
+      [this._token = '',
+      this._itemsObservables = const [],
+      this._userIdFromFireBase = '']);
+
+  ///* ===== História desse contrutor parametrizado =====
+  ///* Antes o construtor não era parametrizado, era do tipo standard.
+  ///* Agora ele foi transformado num construtor parametrizado porque este construtor será
+  ///* utilizado para criar a lista de produtos pelo ProxyProvider create.
+  ///* O create do proxyProvider usa o parametro previous para carregar a ultima
+  ///* lista de produtos carregada anteriormente. Esse contrutor também é inicializado
+  ///* com o parametro _token que alimenta a função loadProductsFromFirebase
+  ///* =====================================================================
   //antes esses _itemsObservables eram carregados pelo dammyProducts.
   //Agora eles são carregados pelo initState() do overviewPage
 
@@ -32,32 +48,41 @@ class ProductListObservable with ChangeNotifier {
 
 //?=========================================================================
 
-//?=========================================================================
+//?===================== ***  LOAD-PRODUCTS  ***  =========================================
   Future<void> loadProductsFromFirebase() async {
-    print('O LoadProductsFromFireBase chegou a ser iniciado');
-
-    print(
-        'A lista _itemsObservables ANTES do clear vale: ${_itemsObservables.length}');
     _itemsObservables.clear();
-    print(
-        'A lista _itemsObservables depois do clear vale: ${_itemsObservables.length}');
 
     //O loadProductFrom... será chamado a cada initState da OverviewPage e isso gera
     //imagens repetidas, por isso tem que limpar.
-
-    final response =
-        await http.get(Uri.parse('${Constants.PRODUCT_BASE_URL}.json'));
+    final response = await http
+        .get(Uri.parse('${Constants.PRODUCT_BASE_URL}.json?auth=$_token'));
     //vamos carregar os dados(advindos do FireBase)  por meio dessa função e substituir os
     //dammyProducts acima. Vamos carregar e substituir no initState do overviewPage.
+    final responseForFavorite = await http.get(
+      Uri.parse(
+          '${Constants.USER_FAVORITES_URL}/$_userIdFromFireBase.json?auth=$_token'),
+      //o id não envia pois estou aqui adicionando um novo produto
+      //converte para json
+    );
+
+    //* ======== testes para saber se a resposta retorna null ou vazio ========
     if (response.body == 'null') //!Se eu colocar null sem as aspas da erro
       return; //Se não tem nada no banco de dados, então retorna sem carregar nada. Aí fica valendo o [] lá na delacração de _itemsObservables
+
+    Map<String, dynamic> favData = responseForFavorite.body == 'null'
+        ? {}
+        : jsonDecode(responseForFavorite.body);
+
+    //* ===================================================================
+//!higorgustavo@gmail.com  qqqqqq
     Map<String, dynamic> data = jsonDecode(response.body);
     print('Esse é o conteúdo do response.body: ${response.body}');
-    // print(
-    //     'Qual o type do price do lugar zero? ${data[0]['price'].runtimeType}');
+    _itemsObservables = [];
     data.forEach((productId, productData) {
-      print(
-          'Qual o type do price do produtoId $productId é: ${productData['price'].runtimeType}');
+      final isFavoriteFromFirebase = favData[productId] ?? false;
+      // print(
+      //     'Esse é o valor inserido em cada $productId no isFavorite: ${favData[_userIdFromFireBase][productId]}');
+
       _itemsObservables.add(
         //cria o _itemsObservables que será usado lá no body do productOverviewPage quando ele chamar o ProductGrid
         Product(
@@ -66,10 +91,15 @@ class ProductListObservable with ChangeNotifier {
           description: productData['description'],
           price: double.parse('${productData['price']}'),
           imageUrl: productData['imageUrl'],
-          isFavorite: productData['isFavorite'],
+          //? isFavorite: productData['isFavorite'], //Não é necessário mais coletar o isFavorite
+          //? nesta coleção products pois a marcação de favorito será
+          //? feita em outra coleção do banco de dados.
+          isFavorite: isFavoriteFromFirebase,
         ),
       );
     });
+    print(
+        'quando o notifyListeners for chaamado o valor de _itemsObservables é: $_itemsObservables');
     notifyListeners(); //Sem esse notifyListeners o _itemObservables é iniciado normalmente como []
   }
 
@@ -123,7 +153,8 @@ class ProductListObservable with ChangeNotifier {
     if (indexToKnowWherePutTheNew >= 0) {
       await http.patch(
         Uri.parse(
-            '${Constants.PRODUCT_BASE_URL}/${productToUpdateOrAdd.id}.json'),
+          '${Constants.PRODUCT_BASE_URL}/${productToUpdateOrAdd.id}.json?auth=$_token',
+        ),
         body: jsonEncode(
           {
             "name": productToUpdateOrAdd.name,
@@ -165,7 +196,9 @@ class ProductListObservable with ChangeNotifier {
       //para verificar se houve algum problema já que a remoção é otimista: primeiro eu
       //removo da vista do usuário e depois eu removo do banco de dados
       final response = await http.delete(
-        Uri.parse('${Constants.PRODUCT_BASE_URL}/${productToRemove.id}.json'),
+        Uri.parse(
+          '${Constants.PRODUCT_BASE_URL}/${productToRemove.id}.json?auth=$_token',
+        ),
       );
 
       if (response.statusCode >= 400) {
@@ -189,7 +222,9 @@ class ProductListObservable with ChangeNotifier {
 
   Future<void> addProduct(Product product) {
     //! Não há tratamento de erro
-    var urlForAddNewPost = Uri.parse('${Constants.PRODUCT_BASE_URL}.json');
+    var urlForAddNewPost = Uri.parse(
+      '${Constants.PRODUCT_BASE_URL}.json?auth=$_token',
+    );
 
     final postProduct = http.post(
       urlForAddNewPost,
@@ -199,7 +234,7 @@ class ProductListObservable with ChangeNotifier {
           "description": product.description,
           "price": product.price,
           "imageUrl": product.imageUrl,
-          "isFavorite": product.isFavorite
+          //"isFavorite": product.isFavorite
         },
         //o id não envia pois estou aqui adicionando um novo produto
       ), //converte para json
@@ -218,7 +253,7 @@ class ProductListObservable with ChangeNotifier {
             price: product.price,
             description: product.description,
             imageUrl: product.imageUrl,
-            isFavorite: product.isFavorite,
+            //isFavorite: product.isFavorite,
           ),
         ); //aqui há o salvamento dos dados em memoria
         notifyListeners();

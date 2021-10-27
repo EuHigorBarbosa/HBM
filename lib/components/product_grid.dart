@@ -20,11 +20,13 @@ class ProductGrid extends StatelessWidget {
     } else {
       loadedProducts = ponteDeDados.favoriteItems;
     }
-
+    print(
+        'Esse é o valor do loadedProducts que vai ser usado no grid: ${loadedProducts}');
     return GridView.builder(
       padding: EdgeInsets.all(10.0),
       itemCount: loadedProducts.length,
       itemBuilder: (ctx, i) => ChangeNotifierProvider<Product>.value(
+        //!Aula 231 para saber sobre esse .value aí!!!!
         value: loadedProducts[i],
 
         //?create: (_) => loadedProducts[i],    esta construção não é

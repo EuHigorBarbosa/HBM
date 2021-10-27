@@ -25,24 +25,24 @@ class _ProductOverviewPageState extends State<ProductOverviewPage> {
 
   @override
   void initState() {
-    // print(
-    //     'Este é o valor do _isLoading no inicio do processamento: $_isLoading em ${DateTime.now()}');
     super.initState();
-
+    print(
+        'Este é o valor do _isLoading no inicio do processamento: $_isLoading em ${DateTime.now()}');
+    //_isLoading = true; //apenas uma redundancia pra garantir.
     Provider.of<ProductListObservable>(context, listen: false)
         .loadProductsFromFirebase();
     setState(() {
       _isLoading = false;
-      // print(
-      //     'Acabou de iniciar _isLoading: $_isLoading como false em ${DateTime.now()}');
+      print(
+          'Acabou de iniciar _isLoading: $_isLoading como false em ${DateTime.now()}');
     }); //ao terminar de carregar os dados ele informa ao usuario
   }
 
   @override
   Widget build(BuildContext context) {
     print('O build do OverviewPage está iniciando');
-    print(Provider.of<ProductListObservable>(context, listen: false)
-        .itemsObservables);
+    print(
+        'Esse é o valor dos itemsObservables: ${Provider.of<ProductListObservable>(context, listen: false).itemsObservables}');
     //!final ponteDeDados = Provider.of<ProductListObservable>(context);
     //Eu não estou mais coletando os dados do dammy_data e sim dos
     //itemsObservables que são a lista manipulada pelo subject da
@@ -54,11 +54,13 @@ class _ProductOverviewPageState extends State<ProductOverviewPage> {
       drawer: AppDrawer(),
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
-          "Vintage by Ailene",
-          textAlign: TextAlign.center,
-          style: (TextStyle(fontSize: 20)),
-        ),
+        title: _isLoading
+            ? Center(child: CircularProgressIndicator())
+            : Text(
+                "Vintage by Ailene",
+                textAlign: TextAlign.center,
+                style: (TextStyle(fontSize: 20)),
+              ),
         actions: [
           PopupMenuButton(
             icon: Icon(Icons.more_vert),

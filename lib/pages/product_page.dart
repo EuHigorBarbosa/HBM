@@ -9,9 +9,8 @@ class ProductPage extends StatelessWidget {
 
   Future<void> _refreshProducts(BuildContext context) {
     //Essa função será chamada quando o scroll for refreshado - olhe o parametro onREfresh:
-    Provider.of<ProductListObservable>(context, listen: false)
+    return Provider.of<ProductListObservable>(context, listen: false)
         .loadProductsFromFirebase();
-    return Future.delayed(Duration(seconds: 2));
   }
 
   @override

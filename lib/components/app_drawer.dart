@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop/models/models.dart';
 import 'package:shop/utils/utils.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -19,7 +21,7 @@ class AppDrawer extends StatelessWidget {
             title: Text('Loja'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(
-                AppRoutes.HOME,
+                AppRoutes.AUTH_OR_HOME,
               );
             },
           ),
@@ -62,12 +64,26 @@ class AppDrawer extends StatelessWidget {
                       child: Text('OK'),
                       onPressed: () {
                         Navigator.of(context)
-                            .pushReplacementNamed(AppRoutes.HOME);
+                            .pushReplacementNamed(AppRoutes.AUTH_OR_HOME);
                         //é o pop que vai retornar o bool
                       },
                     ),
                   ]),
             ),
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Sair'),
+            onTap: () {
+              Provider.of<Auth>(
+                context,
+                listen: false,
+              ).logoutFunction();
+              Navigator.of(context).pushReplacementNamed(
+                AppRoutes.AUTH_OR_HOME,
+              );
+            },
           ),
         ],
       ),
