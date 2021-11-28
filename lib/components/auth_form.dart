@@ -1,4 +1,24 @@
+/// 1 - Cria uma variável do tipo AnimationController - ela serve para:
+/// 2 - Cria uma variável do tipo Animation _heightAnimation ... que será do tipo de animação que se deseja
+/// fazer, se for animar height, então o tipo é Size, se for opacity, então o tipo é double
+/// 3 - Dentro do initState eu devo instanciar uma variável criada do tipo AnimationController
+/// colocando um parametro que é o Vsync<TickerProvider> dispara uma callback a cada frame e
+/// também a duração da animação
+///     4 - Para poder preencher esse Vsync com um Ticker temos que usar de um
+///     mixin with SingleTickerProviderStateMixin
+/// 5 - Ainda no initState eu devo configurar uma animation instanciando a classe Tween(); pra
+/// determinar os pontos de inicio e fim e a curva
+/// 6 - Liberar o controller instanciado no @override void dispose é necessário.
+/// ============= implementação na UI ================
+/// 7 - O objeto a ser animado tem o height: _heightAnimation?.value.height ?? (_isLogin() ? 310 : 400),
+/// 8 - Determina a direção de animação utilizando um metodo do _controller.forward() e _controller.reverse().
+/// você pode perceber que  o AnimationController tem alguns gets e sets que ajudam
+/// 9 - Depois temos que fazer com que o setState seja um listener da Animation que
+/// foi criada...pra isso adicionamos uma callback setState(()={}) neste listener
+/// e assim, a cada modificação da animação a callback do listener será acionada
+
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/exceptions/exceptions.dart';
 import 'package:shop/models/models.dart';
@@ -14,21 +34,80 @@ class AuthForm extends StatefulWidget {
 }
 
 //higorgustavo@gmail.com
-class _AuthFormState extends State<AuthForm> {
+class _AuthFormState extends State<AuthForm>
+    with SingleTickerProviderStateMixin {
   final _passwordController = TextEditingController();
-  AuthMode _authMode = AuthMode.Login;
-  bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+  AuthMode _authMode = AuthMode.Login;
   //Existe esse negocio de chave glogal e existe esse negocio de tipo FormState
   //utilizando-se essa chave você pode manusear metodos do tipo
   //.currentState.save()
   //.currentWidget
   //.currentContext
+  //Aqui ele iniciou o enum como login..ao inves de usar uma variavel qualquer
+  Map<String, String> _authData = {
+    'email': '',
+    'password': '',
+  };
+
+//faz verificações pra saber se está em login ou em signUp
+  bool _isLogin() => _authMode == AuthMode.Login;
+  //bool _isSignup() => _authMode == AuthMode.SignUp;
+  //paramos de usar ao começar a fazer as animações. Antes foi útil.
+
+  AnimationController? _controller;
+  Animation<double>? _opacityAnimation;
+  Animation<Offset>? _slideAnimation;
+
+  ///Essa classe receberá um tipo generics que vai ser o tipo de
+  ///critério de dado que desejo animar, poderia ser altura, opacidade, etc
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+        vsync: this,
+        duration: Duration(
+          milliseconds: 300,
+        ));
+
+    ///Esse this quer dizer: o vsync (responsável por conter a callback a ser chamada 60FPS)
+    ///é a propria classe que eu estou agora pois ela implementa e tem os metodos necessários
+    ///pra se transformar num ticker provider. A cada 100 millisengundo ele chama 6 vezes
+
+    _opacityAnimation = Tween(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _controller!,
+      curve: Curves.decelerate,
+    ));
+    _slideAnimation = Tween<Offset>(
+      begin: Offset(0, -2.5),
+      end: Offset(0, 0),
+    ).animate(CurvedAnimation(
+      parent: _controller!,
+      curve: Curves.decelerate,
+    ));
+    //_heightAnimation?.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller?.dispose();
+  }
+
   void _switchAuthMode() {
     setState(() {
-      _authMode == AuthMode.Login
-          ? _authMode = AuthMode.SignUp
-          : _authMode = AuthMode.Login;
+      if (_isLogin()) {
+        _authMode = AuthMode.SignUp;
+        _controller?.forward();
+      } else {
+        _authMode = AuthMode.Login;
+        _controller?.reverse();
+      }
     });
   }
 
@@ -90,15 +169,6 @@ class _AuthFormState extends State<AuthForm> {
     setState(() => _isLoading = false);
   }
 
-  //Aqui ele iniciou o enum como login..ao inves de usar uma variavel qualquer
-  Map<String, String> _authData = {
-    'email': '',
-    'password': '',
-  };
-//faz verificações pra saber se está em login ou em signUp
-  bool _isLogin() => _authMode == AuthMode.Login;
-  bool _isSignup() => _authMode == AuthMode.SignUp;
-
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -113,8 +183,11 @@ class _AuthFormState extends State<AuthForm> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Container(
-        height: 420,
+      child: AnimatedContainer(
+        //height: _isLogin() ? 250 : 300,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.linear,
+        //height: _heightAnimation?.value.height ?? (_isLogin() ? 310 : 400),
         width: deviceSize.width * 0.75,
         padding: EdgeInsetsDirectional.all(16),
         child: SingleChildScrollView(
@@ -148,28 +221,40 @@ class _AuthFormState extends State<AuthForm> {
                     return null;
                   },
                 ),
-                if (_isSignup())
-                  TextFormField(
-                    decoration:
-                        InputDecoration(labelText: 'Confirmar password'),
-                    obscureText: true,
-                    keyboardType: TextInputType.emailAddress,
-                    //para que a validação não seja disparada na validação do login eu posso fazer
-                    //essa condicional de seguranca:
-                    validator: _isLogin()
-                        ? null
-                        : (_password) {
-                            //Para ter acesso ao campo digitado no textfield acima pra fazer
-                            //a confirmação eu vou precisar utilizar o textEditingController()
-                            final password = _password ??
-                                ''; //Estrategia para trabalhar com certeza com valor não null
-                            if (password != _passwordController.text) {
-                              return 'Senhas digitadas não conferem';
-                            } // Se a confi
-                          },
+                AnimatedContainer(
+                  constraints: BoxConstraints(
+                      minHeight: _isLogin() ? 0 : 20,
+                      maxHeight: _isLogin() ? 0 : 120),
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.linear,
+                  child: FadeTransition(
+                    opacity: _opacityAnimation!,
+                    child: SlideTransition(
+                      position: _slideAnimation!,
+                      child: TextFormField(
+                        decoration:
+                            InputDecoration(labelText: 'Confirmar password'),
+                        obscureText: true,
+                        keyboardType: TextInputType.emailAddress,
+                        //para que a validação não seja disparada na validação do login eu posso fazer
+                        //essa condicional de seguranca:
+                        validator: _isLogin()
+                            ? null
+                            : (_password) {
+                                //Para ter acesso ao campo digitado no textfield acima pra fazer
+                                //a confirmação eu vou precisar utilizar o textEditingController()
+                                final password = _password ??
+                                    ''; //Estrategia para trabalhar com certeza com valor não null
+                                if (password != _passwordController.text) {
+                                  return 'Senhas digitadas não conferem';
+                                } // Se a confi
+                              },
+                      ),
+                    ),
                   ),
+                ),
                 SizedBox(
-                  height: 50,
+                  height: 25,
                 ),
                 (_isLoading)
                     ? CircularProgressIndicator()
@@ -187,12 +272,15 @@ class _AuthFormState extends State<AuthForm> {
                         ),
                       ),
                 SizedBox(
-                  height: 50,
+                  height: 25,
                 ),
                 TextButton(
                   onPressed: _switchAuthMode,
                   child: Text(
                       _isLogin() ? 'DESEJA REGISTRAR?' : 'JÁ POSSUI CONTA?'),
+                ),
+                SizedBox(
+                  height: 25,
                 ),
               ],
             ),

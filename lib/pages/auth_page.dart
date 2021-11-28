@@ -41,49 +41,51 @@ class AuthPage extends StatelessWidget {
               ),
             ),
             SafeArea(
-              child: Container(
-                width: double.infinity,
-                child: Column(
-                  //mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      child: Align(
-                        child: FittedBox(
-                          fit: BoxFit.fitHeight,
-                          child: Text(
-                            'Minha Loja',
-                            style: TextStyle(
-                              fontSize: 30 * SizeConfig.deviceCompensation,
-                              fontFamily: 'Anton',
-                              color: Theme.of(context).bottomAppBarColor,
+              child: Center(
+                //width: double.infinity,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    //crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        child: Align(
+                          child: FittedBox(
+                            fit: BoxFit.fitHeight,
+                            child: Text(
+                              'Minha Loja',
+                              style: TextStyle(
+                                fontSize: 30 * SizeConfig.deviceCompensation,
+                                fontFamily: 'Anton',
+                                color: Theme.of(context).bottomAppBarColor,
+                              ),
                             ),
                           ),
                         ),
+                        margin: EdgeInsets.symmetric(horizontal: 40),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 10,
+                        ),
+                        transform: Matrix4.rotationZ(-8 * pi / 180)
+                          ..translate(-10.0),
+                        //aqui foi need o operador cascade porque o translate retorna void
+                        //veja as anotações da aula 303.
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.deepOrange.shade900,
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 8,
+                                color: Colors.black26,
+                                offset: Offset(0, 2),
+                              )
+                            ]),
+                        //alignment: Alignment.center,
                       ),
-                      margin: EdgeInsets.symmetric(horizontal: 40),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 10,
-                      ),
-                      transform: Matrix4.rotationZ(-8 * pi / 180)
-                        ..translate(-10.0),
-                      //aqui foi need o operador cascade porque o translate retorna void
-                      //veja as anotações da aula 303.
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.deepOrange.shade900,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 8,
-                              color: Colors.black26,
-                              offset: Offset(0, 2),
-                            )
-                          ]),
-                      //alignment: Alignment.center,
-                    ),
-                    AuthForm(),
-                  ],
+                      AuthForm(),
+                    ],
+                  ),
                 ),
               ),
             )

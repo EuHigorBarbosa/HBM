@@ -133,7 +133,7 @@ class OrderList with ChangeNotifier {
           products: (orderData['products'] as List<dynamic>).map((itemOfMap) {
             return CartItem(
                 id: itemOfMap['id'],
-                price: itemOfMap['price'],
+                price: itemOfMap['price'].toDouble(),
                 name: itemOfMap['name'],
                 producId: itemOfMap['producId'],
                 quantity: itemOfMap['quantity']);

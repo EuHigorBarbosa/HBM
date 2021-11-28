@@ -12,8 +12,17 @@ class ProductItem extends StatelessWidget {
     final msgErrorOrExcpetionAlert = ScaffoldMessenger.of(context);
     return ListTile(
       leading: CircleAvatar(
-        backgroundImage: NetworkImage(productItem.imageUrl),
+        backgroundColor: Colors.red,
+        backgroundImage: AssetImage('assets/images/ggg.jpg'),
+        child: CircleAvatar(
+          radius: 65,
+          backgroundColor: Colors.transparent,
+          backgroundImage: NetworkImage(productItem.imageUrl),
+        ),
       ),
+      // leading: CircleAvatar(
+      //   backgroundImage: NetworkImage(productItem.imageUrl),
+      // ),
       title: Text(productItem.name),
       trailing: Container(
         width: 100,

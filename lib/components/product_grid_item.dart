@@ -15,21 +15,30 @@ class ProductGridItem extends StatelessWidget {
     //? Mas tem uma forma de fazer que é mais interessante pois ganha-se performace. É utilizando
     //? o CONSUMER
     final auth = Provider.of<Auth>(context, listen: false);
+    print('Essa é a tag: ${productItem.id}');
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
           child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(
-                AppRoutes.PRODUCT_DETAIL,
-                arguments: productItem,
-              );
-            },
-            child: Image.network(
-              productItem.imageUrl,
-              fit: BoxFit.cover,
-            ),
-          ),
+              onTap: () {
+                Navigator.of(context).pushNamed(
+                  AppRoutes.PRODUCT_DETAIL,
+                  arguments: productItem,
+                );
+              },
+              child: Hero(
+                tag: productItem.id,
+                child: FadeInImage(
+                  placeholder: AssetImage('assets/images/ggg.jpg'),
+                  image: NetworkImage(productItem.imageUrl),
+                  fit: BoxFit.cover,
+                ),
+              )
+              // child: Image.network(
+              //   productItem.imageUrl,
+              //   fit: BoxFit.cover,
+              // ),
+              ),
           footer: GridTileBar(
             backgroundColor: Colors.black54,
             leading: Consumer<Product>(
